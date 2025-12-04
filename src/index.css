@@ -1,0 +1,121 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-primary: "DM Sans", sans-serif;
+    --font-secondary: "DM Sans", sans-serif;
+    --color-primary: #003249;
+    --color-secondary: #007ea7;
+    --color-tertiary: #80ced7;
+    --color-fourth: #9ad1d4;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-black: 800;
+    --font-weight-extrabold: 900;
+    --font-weight-extralight: 100;
+  }
+
+  body {
+    margin: 0;
+    font-family: "DM Sans", sans-serif;
+    font-weight: 400;
+    padding: 0;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+}
+
+@layer utilities {
+  .bg-gradient1 {
+    background-image: linear-gradient(
+      135deg,
+      var(--color-secondary),
+      var(--color-tertiary)
+    ) !important;
+  }
+
+  .hover\:bg-gradient1:hover {
+    background-image: linear-gradient(
+      135deg,
+      var(--color-secondary),
+      var(--color-tertiary)
+    ) !important;
+    background-color: transparent !important;
+  }
+
+  .bg-gradient2 {
+    background-image: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-tertiary)
+    ) !important;
+  }
+
+  .hover\:bg-gradient2:hover {
+    background-image: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-secondary)
+    ) !important;
+    background-color: transparent !important;
+  }
+
+  .text-gradient1 {
+    background-image: linear-gradient(
+      135deg,
+      var(--color-secondary),
+      var(--color-tertiary)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .text-gradient2 {
+    background-image: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-tertiary)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .hover\:text-gradient1:hover {
+    background-image: linear-gradient(
+      135deg,
+      var(--color-secondary),
+      var(--color-tertiary)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .hover\:text-gradient2:hover {
+    background-image: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-secondary)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .hover\:border-primary:hover {
+    border-color: #003249 !important;
+    border-width: 2px !important;
+  }
+}
