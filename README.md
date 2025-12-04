@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/138633e1-f9ba-4211-bf79-8850390f2e21/deploy-status)](https://app.netlify.com/projects/thescholarlink/deploys)
+
 # ScholarLink
 
 A web application for discovering and managing scholarship opportunities.

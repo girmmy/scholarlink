@@ -1,6 +1,7 @@
 [
   {
     "id": 1,
+    "name": "Ronald McDonald House Charities Scholarships",
     "description": "Committed to making a lasting positive impact on the lives of individuals, families, and children, the organization proudly extends a helping hand to those seeking educational advancement and support. With a deep-rooted mission to empower and uplift, the scholarships and grants offered by the Ronald McDonald House of the Southwest open doors to achievement, fostering both personal development and community enrichment.",
     "eligibility": "high school senior, has had a serious illness or has a sibling who has had a serious illness",
     "acceptance_rate": "N/A",
@@ -14,6 +15,7 @@
   },
   {
     "id": 2,
+    "name": "Hope Scholarship",
     "description": "N/A",
     "eligibility": "Must be a resident of Georgia during the time of graduation, minimum of 3.00 weighed on the HOPE scale,minimum of four rigorous credits from the 'Academic Rigor Course List',must enroll in eligible GA public or private college or university.",
     "acceptance_rate": "if you meet eligibility you receive the award",
@@ -27,6 +29,7 @@
   },
   {
     "id": 3,
+    "name": "Doodle for Google Contest",
     "description": "Art contest for K–12 students with scholarships for winners",
     "eligibility": "k-12 grade students in GA (in the US)",
     "acceptance_rate": "60 winners recognized out of thousands",
@@ -40,6 +43,7 @@
   },
   {
     "id": 4,
+    "name": "University of Georgia Foundation Fellowship",
     "description": "N/A",
     "eligibility": "HS students who will be admitted to UGA",
     "acceptance_rate": "2-3%",
@@ -53,6 +57,7 @@
   },
   {
     "id": 5,
+    "name": "Amazon Future Engineer Scholarship",
     "description": "A national scholarship supporting students pursuing computer science, software engineering, or STEM careers, including a guaranteed paid Amazon internship.",
     "eligibility": "Highschool Senior, minimum of 2.3 GPA, Planning to major in a stem field, Us citizen, financial need required, must be planning to attend a four year college",
     "acceptance_rate": "10-12%",
@@ -66,6 +71,7 @@
   },
   {
     "id": 6,
+    "name": "TheDream.US National Scholarship",
     "description": "Applications are open to first generation immigrant students with or without DACA or TPS who came to the U.S. before the age of 16 and before Nov. 1, 2020.",
     "eligibility": "Highschool senior,must be an immigrant,family income <100,000, Above a 2.5 gpa",
     "acceptance_rate": "6-8%",
@@ -79,6 +85,7 @@
   },
   {
     "id": 7,
+    "name": "Unico National Scholarship",
     "description": "Offers various scholarships based on academic achievement,community involvement,and leadership potential. Aims for students who have a strong academic portfolio",
     "eligibility": "U.S citizen or legal resident Enrolled in an accredited U.S. college or university Must demonstrate financial need Minimum GPA requirement: 3.0",
     "acceptance_rate": "varies but highly competitive",
@@ -92,6 +99,7 @@
   },
   {
     "id": 8,
+    "name": "SMART Scholarship",
     "description": "The SMART Scholarship is a merit-based opportunity for students pursuing STEM degrees at the bachelor's, master's, and doctoral levels. In 2023, SMART expanded eligibility to incoming college freshmen with no prior college credit, extending the opportunity to high school seniors.",
     "eligibility": "citizen of U.S., Australia, Canada, New Zealand, or U.K., 18 years or older by January 1,2027, minimum of 3.0 GPA, currently/intend to pursue a career in one of the SMART stem disciplines, planning to attend college in the U.S.",
     "acceptance_rate": "8-15%",
@@ -105,6 +113,7 @@
   },
   {
     "id": 9,
+    "name": "Davidson Institute — Davidson Fellows Scholarship",
     "description": "A prestigious national scholarship for exceptionally talented students ages 13–18 who complete a significant project in science, literature, math, music, engineering, or philosophy.",
     "eligibility": "13-18 years old, us citizen, have original work",
     "acceptance_rate": "3-4%",
@@ -118,6 +127,7 @@
   },
   {
     "id": 10,
+    "name": "Carson Scholars Fund",
     "description": "The Carson Scholars Fund awards $1,000 college scholarships to students in grades 4-11 who excel academically and are dedicated to serving their communities.",
     "eligibility": "grades 4-11,Us student, minimum 3.75 GPA,community service",
     "acceptance_rate": "N/A",
@@ -131,6 +141,7 @@
   },
   {
     "id": 11,
+    "name": "APIA Scholars",
     "description": "The Asian & Pacific Islander American Scholarship Fund (APIA Scholars) is dedicated to supporting underserved Asian American, Native Hawaiian, and Pacific Islander (AANHPI) students. The General Scholarship Program aims to provide financial assistance to students who are often underrepresented in higher education.",
     "eligibility": "Highschool senior,Us citizen AAP heritage,minimum GPA of 2.7, has financial needs.",
     "acceptance_rate": "5-7%",
@@ -144,6 +155,7 @@
   },
   {
     "id": 12,
+    "name": "Gates Scholarship",
     "description": "Full-ride scholarship for outstanding minority high school seniors",
     "eligibility": "HS seniors,minority background above a 3.3 GPA",
     "acceptance_rate": "1%",
@@ -157,6 +169,7 @@
   },
   {
     "id": 13,
+    "name": "Georgia EMC Scholarship",
     "description": "Scholarships offered by local Electric Membership Corporations to support community students.",
     "eligibility": "HS seniors in GA",
     "acceptance_rate": "10-15%",
@@ -170,6 +183,7 @@
   },
   {
     "id": 14,
+    "name": "GE/Reagan Foundation Scholarship Program",
     "description": "The GE-Reagan Foundation Scholarship Program offers college scholarships of up to $40,000 for high school seniors nationwide who showcase leadership, drive, integrity, and citizenship. Easy to apply and will change students' lives.",
     "eligibility": "Seniors who plan on going to a four year college,Us citizenship, minimum 3.0 preferred 4.0,demonstrates leadership,drive and talent.",
     "acceptance_rate": "N/A",
@@ -183,6 +197,7 @@
   },
   {
     "id": 15,
+    "name": "GCPS Foundation Scholarships",
     "description": "The GCPS Foundation Scholarships are financial awards provided by the Gwinnett County Public Schools Foundation Fund, Inc. to support students' educational pursuits.",
     "eligibility": "Highschool seniors who are talented in the field of athletics,acdemics and community service.",
     "acceptance_rate": "10-15%",
@@ -196,6 +211,7 @@
   },
   {
     "id": 16,
+    "name": "Big Future Scholarship",
     "description": "The BigFuture Scholarship, offered by the College Board, is a national program that rewards high-school students for completing simple college-planning steps such as building a college list, exploring scholarships, practicing for the SAT, and applying to colleges.",
     "eligibility": "You need to be a junior sophomore or senior to apply",
     "acceptance_rate": "1-2%",
@@ -209,6 +225,7 @@
   },
   {
     "id": 17,
+    "name": "First-Generation Scholarships",
     "description": "Scholarships specifically for students who are the first in their family to attend college.",
     "eligibility": "First generation college student,3.5 or higher GPA,finical needs, leadership experience.",
     "acceptance_rate": "Not shared but very competitive",
@@ -222,6 +239,7 @@
   },
   {
     "id": 18,
+    "name": "Horatio Alger Association Scholarships",
     "description": "The Horatio Alger Association Scholarships are national awards given to high school students who have demonstrated resilience in overcoming adversity, strong academic commitment, and financial need",
     "eligibility": "high school senior,U.S. citizen,critical financial need,minimum GPA of 2.0,Plan to pursue a bachelor's degree",
     "acceptance_rate": "7-10%",
@@ -235,6 +253,7 @@
   },
   {
     "id": 19,
+    "name": "Cameron Impact Scholarship",
     "description": "Full-tuition scholarship for students committed to making an impact",
     "eligibility": "U.S. high school juniors and seniors with a GPA higher than or 3.7",
     "acceptance_rate": "10-15%",
@@ -248,6 +267,7 @@
   },
   {
     "id": 20,
+    "name": "Generation Google Scholarship",
     "description": "A scholarship that helps students who are pursuing majors in computer science.",
     "eligibility": "High school juniors–seniors planning to major in computer science",
     "acceptance_rate": "selective 200 selected and awarded out of many",
@@ -261,6 +281,7 @@
   },
   {
     "id": 21,
+    "name": "Young Scholars Program – Jack Kent Cooke Foundation",
     "description": "Long-term support for high-achieving, low-income middle and high school students.",
     "eligibility": "7th graders (pipeline program continuing into high school)",
     "acceptance_rate": "N/A",
@@ -274,6 +295,7 @@
   },
   {
     "id": 22,
+    "name": "Gen and Kelly Tanabe Scholarship",
     "description": "The Gen and Kelly Tanabe Scholarship is a nationwide award given by a scholarship foundation to students of a variety of education levels.",
     "eligibility": "Us citizen and students form gth-10th grade",
     "acceptance_rate": "not publicly specified",
@@ -287,6 +309,7 @@
   },
   {
     "id": 23,
+    "name": "Equitable Foundation Scholarship",
     "description": "The Equitable Excellence Scholarship® program is the flagship program of Equitable Foundation, the company's charitable-giving arm. The enhanced scholarship program includes renewable scholarships for high school seniors and engagement to create pathways to opportunities for aspiring college students.",
     "eligibility": "high school senior planning to attend a college, minimum of 2.5 GPA",
     "acceptance_rate": "N/A",
@@ -300,6 +323,7 @@
   },
   {
     "id": 24,
+    "name": "The James W. McLamore WHOPPER Scholarship",
     "description": "In 2011, The McLamore Family Added A New Category To The BK Scholars Program To Help Make An Even Greater Impact. The James W. McLamore WHOPPER Scholarship Award Was Created, Allowing The Foundation To Grant $60,000 Awards To Three Deserving Students Each Year.",
     "eligibility": "high school senior, minimum 3.5 GPA",
     "acceptance_rate": "N/A",
@@ -313,6 +337,7 @@
   },
   {
     "id": 25,
+    "name": "Jackie Robinson Foundation Scholarship",
     "description": "JRF Scholars receive college scholarships of up to $35,000 over four years and are financially sponsored to attend JRF's annual, four-day 'Mentoring and Leadership Conference' in New York City and other events throughout the year. Aside from generous financial support, Scholars benefit from a comprehensive, four-year program that includes career guidance, internship and permanent job placement, travel abroad, and leadership and practical life skills training.",
     "eligibility": "high school senior, U.S. citizen, evidence of financial need, plan to attend JFR approved college",
     "acceptance_rate": "60 students",
@@ -326,6 +351,7 @@
   },
   {
     "id": 26,
+    "name": "Yashoda Reddy Education Award",
     "description": "Scholarships aimed at helping women in Georgia attend college, particularly those with financial need and a commitment to improving their communities.",
     "eligibility": "Female students from Georgia Must demonstrate financial need and leadership potential. Preference for students who are committed to community service.",
     "acceptance_rate": "N/A",
@@ -339,6 +365,7 @@
   },
   {
     "id": 27,
+    "name": "Oxford Orjiako Graduate Scholarship",
     "description": "The scholarship is funded by Dr Bryant Orjiako and builds on Said Business School's mission to create opportunities for African change-makers. This gift enables the establishment of a new, fully endowed MBA scholarship, open to students coming to the school from across the African continent.",
     "eligibility": "must be of African nationality",
     "acceptance_rate": "only one scholarship will be given",
@@ -352,6 +379,7 @@
   },
   {
     "id": 28,
+    "name": "Jefferson Scholarship",
     "description": "The Jefferson Scholars Foundation attracts outstanding undergraduate students to the University of Virginia through two scholarship programs–the Jefferson Scholars Program and the Walentas Scholars Program.",
     "eligibility": "Have to be accepted into the University of Virginia",
     "acceptance_rate": "0.00357%",
@@ -365,6 +393,7 @@
   },
   {
     "id": 29,
+    "name": "Georgia Promise Scholarship",
     "description": "Signed into law in 2024, through Senate Bill 233, the Georgia Promise Scholarship Program is aimed to empower families to pursue exceptional educational programs through nonpublic schooling, including private school and home study. Should eligible families choose to leave public school (or forgo attending as a new kindergartener) to participate, the Georgia Promise Scholarship will allow families to use funds for private school tuition and fees, required textbooks, tutoring services, curriculum, physician/therapist services, transportation services, and other approved expenses.",
     "eligibility": "A student who is currently or has been enrolled in Georgia Public School for 2 consecutive semesters OR a rising kindergartener; parents have reside in Georgia for 1+ year with the exception of military people), has to be on the eligible attendance zone list",
     "acceptance_rate": "~56%",
@@ -378,6 +407,7 @@
   },
   {
     "id": 30,
+    "name": "Elks National Foundation Most Valuable Student Scholarship",
     "description": "Since 1931, the Elks National Foundation has helped students recognize their academic dreams. Each year, we award nearly $4 million in college scholarships to at least 850 outstanding, service-minded high school seniors. Once you're an Elks scholar, you're family.",
     "eligibility": "High school seniors, US citizen, applied to 4-year undergraduate school",
     "acceptance_rate": "500 students",
@@ -391,6 +421,7 @@
   },
   {
     "id": 31,
+    "name": "Coca Cola Scholars Program",
     "description": "The Coca-Cola Scholars Program scholarship is an achievement-based scholarship awarded to students in their final year of high school. Students are recognized for their capacity to lead and serve, as well as their commitment to making a significant impact on their schools and communities",
     "eligibility": "US citizen/permanent resident, high school seniors, minimum 3.0 GPA, getting high school diploma in current academic year",
     "acceptance_rate": "Less than .1%",
@@ -404,6 +435,7 @@
   },
   {
     "id": 32,
+    "name": "Hispanic Scholarship Fund",
     "description": "HSF empowers students and parents with the knowledge and resources to successfully complete a higher education, while providing support services and scholarships to as many exceptional students, HSF Scholars and Alumni as possible.",
     "eligibility": "must be of hispanic heritage, US citizen/Permanent resident/DACA, minimum of 3.0 GPA for high school, minimum of 2.5 GPA for college, must enroll full-time in upcoming college",
     "acceptance_rate": "N/A",
@@ -417,6 +449,7 @@
   },
   {
     "id": 33,
+    "name": "Dell Scholars Program",
     "description": "The Dell Scholars program helps you earn your degree and launch your career. Each year, 500 students nationwide become Dell Scholars, gaining financial assistance, academic advising, career coaching, and a team of dedicated experts who support them every step of the way.",
     "eligibility": "high school senior participating in a college readiness program, At least 2.4 GPA, pell Grant eligible, plan to attend full-time at college",
     "acceptance_rate": "500 students nationwide (Exact percentage is not known)",
@@ -430,6 +463,7 @@
   },
   {
     "id": 34,
+    "name": "Burger King Scholars Program",
     "description": "Through the BK$M Scholars program, we've awarded nearly $64 million to over 54,000 deserving students across North America. Our goal is to grant one scholarship for every BK® restaurant — that's more than $7 million each year!",
     "eligibility": "be living in US/Puerto Rico/Guam/Canada, minimum 2.0 GPA, high school seniors or college student who is past recipient of the burger king scholarship, work at burger king/spouse work at burger king/parent works at burger king",
     "acceptance_rate": "N/A",
