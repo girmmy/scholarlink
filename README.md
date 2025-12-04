@@ -1,70 +1,194 @@
-# Getting Started with Create React App
+# ScholarLink
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A web application for discovering and managing scholarship opportunities.
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed on your system:
+
+### Node.js and npm
+
+This project requires **Node.js** (version 14 or higher recommended) and **npm** (Node Package Manager), which comes bundled with Node.js.
+
+#### Installing Node.js and npm
+
+**Option 1: Download from Official Website (Recommended)**
+
+1. Visit [nodejs.org](https://nodejs.org/)
+2. Download the LTS (Long Term Support) version for your operating system
+3. Run the installer and follow the installation wizard
+4. Verify installation by opening a terminal/command prompt and running:
+   ```bash
+   node --version
+   npm --version
+   ```
+
+**Option 2: Using a Package Manager**
+
+- **macOS (using Homebrew):**
+
+  ```bash
+  brew install node
+  ```
+
+- **Linux (Ubuntu/Debian):**
+
+  ```bash
+  sudo apt update
+  sudo apt install nodejs npm
+  ```
+
+- **Windows (using Chocolatey):**
+  ```bash
+  choco install nodejs
+  ```
+
+## Getting Started
+
+### 1. Clone the Repository
+
+Clone this repository to your local machine using one of the following methods:
+
+**Using HTTPS:**
+
+```bash
+git clone https://github.com/yourusername/scholarlink.git
+```
+
+**Using SSH:**
+
+```bash
+git clone git@github.com:yourusername/scholarlink.git
+```
+
+**Using GitHub CLI:**
+
+```bash
+gh repo clone yourusername/scholarlink
+```
+
+### 2. Navigate to Project Directory
+
+```bash
+cd scholarlink
+```
+
+### 3. Install Dependencies
+
+Install all required packages and dependencies:
+
+```bash
+npm install
+```
+
+or using the shorthand:
+
+```bash
+npm i
+```
+
+This command will:
+
+- Read the `package.json` file
+- Download and install all dependencies listed in `dependencies` and `devDependencies`
+- Create a `node_modules` folder with all the installed packages
+
+**Note:** The first installation may take a few minutes depending on your internet connection.
+
+### 4. Start the Development Server
+
+Once dependencies are installed, start the development server:
+
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173` (or another port if 5173 is occupied). The terminal will display the exact URL.
+
+The development server includes:
+
+- Hot Module Replacement (HMR) - changes reflect immediately
+- Fast refresh for React components
+- Error overlay in the browser
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+### `npm run dev`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Starts the development server with Vite. The app will automatically reload when you make changes to the code.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Creates an optimized production build of the app in the `build` folder. This build is minified and ready for deployment.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### `npm run preview`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Serves the production build locally so you can preview how it will look when deployed.
 
-### `npm run eject`
+### `npm test`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Launches the test runner in interactive watch mode. See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Project Structure
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+scholarlink/
+├── public/              # Static assets
+│   ├── data/           # JSON data files
+│   └── ...
+├── src/
+│   ├── components/     # Reusable React components
+│   ├── pages/          # Page components
+│   ├── assets/         # Images and other assets
+│   ├── App.jsx         # Main App component
+│   └── main.jsx        # Application entry point
+├── package.json        # Project dependencies and scripts
+├── vite.config.js      # Vite configuration
+├── tailwind.config.js  # Tailwind CSS configuration
+└── README.md          # This file
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Technologies Used
 
-## Learn More
+- **React** - UI library
+- **Vite** - Build tool and development server
+- **React Router** - Client-side routing
+- **Tailwind CSS** - Utility-first CSS framework
+- **React Icons** - Icon library
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Troubleshooting
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Port Already in Use
 
-### Code Splitting
+If port 5173 is already in use, Vite will automatically try the next available port. Check the terminal output for the actual port number.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Installation Issues
 
-### Analyzing the Bundle Size
+If you encounter errors during `npm install`:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. Delete `node_modules` folder and `package-lock.json`
+2. Clear npm cache: `npm cache clean --force`
+3. Run `npm install` again
 
-### Making a Progressive Web App
+### Permission Errors (macOS/Linux)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+If you get permission errors, try using `sudo` (not recommended) or fix npm permissions:
 
-### Advanced Configuration
+```bash
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Contributing
 
-### Deployment
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## License
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+See the [LICENSE](LICENSE) file for details.
