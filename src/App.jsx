@@ -1,12 +1,20 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
+import Scholarships from "./pages/Scholarships";
+import Profile from "./pages/Profile";
+import References from "./pages/References";
+import Signup from "./pages/Signup";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/scholarships" element={<Scholarships />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/references" element={<References />} />
+        <Route path="/sign-up" element={<Signup />} />
       </Routes>
     </Router>
   );
