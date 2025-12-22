@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import SearchBar from "../components/SearchBar";
+import ScholarshipModal from "../components/ScholarshipModal";
 
 const Scholarships = () => {
   const [scholarships, setScholarships] = useState([]);
@@ -9,7 +9,7 @@ const Scholarships = () => {
   const [basedFilter, setBasedFilter] = useState("all"); // all | need | merit | both
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [expandedCards, setExpandedCards] = useState(new Set());
+  const [selectedScholarship, setSelectedScholarship] = useState(null);
 
   useEffect(() => {
     const fetchScholarships = async () => {
@@ -31,25 +31,9 @@ const Scholarships = () => {
     fetchScholarships();
   }, []);
 
-  const handleSearch = (value) => {
-    setSearchQuery(value);
-  };
-
-  const handleBasedFilterChange = (value) => {
-    setBasedFilter(value);
-  };
-
-  const toggleCardExpansion = (id) => {
-    setExpandedCards((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-      return newSet;
-    });
-  };
+  const handleFilteredSearch = (e) => {
+    setSearchQuery(e.target.value);
+  }
 
   const filteredScholarships = useMemo(() => {
     const normalizedQuery = searchQuery.toLowerCase().trim();
@@ -79,278 +63,155 @@ const Scholarships = () => {
     });
   }, [scholarships, searchQuery, basedFilter]);
 
-  const renderWebsiteLink = (website) => {
-    if (!website) return null;
-
-    const isUrl = website.startsWith("http://") || website.startsWith("https://");
-
-    if (isUrl) {
-      return (
-        <a
-          href={website}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-600 hover:underline"
-        >
-          Visit website
-        </a>
-      );
-    }
-
-    return <span className="text-gray-700">{website}</span>;
-  };
-
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 min-h-screen font-sans">
       <Navbar />
 
-      <main className="pt-28 pb-16 max-w-5xl mx-auto px-4">
-        {/* HEADER */}
-        <section className="mb-10">
-          <h1 className="text-5xl md:text-6xl font-bold text-gradient1 text-center mb-4">
-            Scholarships
+      <main className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        {/* HEADER SECTION */}
+        <div className="mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Explore Scholarships
           </h1>
-          <p className="text-center text-gray-600 max-w-2xl mx-auto text-lg">
-            Browse curated scholarships with key information like eligibility,
-            award amounts, deadlines, and more. Use the search and filters to
-            quickly find opportunities that fit you.
+          <p className="text-gray-600 text-lg max-w-2xl">
+            Find the perfect financial support for your education. Search through our curated list of opportunities.
           </p>
-        </section>
+        </div>
 
-        {/* SEARCH + FILTERS */}
-        <section className="mb-10">
-          <div className="flex flex-col gap-4">
-            <SearchBar onSearch={handleSearch} />
-
-            <div className="flex flex-wrap gap-3 justify-center md:justify-start mt-2">
-              <button
-                type="button"
-                onClick={() => handleBasedFilterChange("all")}
-                className={`px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 ${
-                  basedFilter === "all"
-                    ? "bg-gradient2 text-white border-transparent"
-                    : "bg-white text-gray-700 border-gray-300 hover:border-primary"
-                }`}
-              >
-                All types
-              </button>
-              <button
-                type="button"
-                onClick={() => handleBasedFilterChange("need")}
-                className={`px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 ${
-                  basedFilter === "need"
-                    ? "bg-gradient2 text-white border-transparent"
-                    : "bg-white text-gray-700 border-gray-300 hover:border-primary"
-                }`}
-              >
-                Need-based
-              </button>
-              <button
-                type="button"
-                onClick={() => handleBasedFilterChange("merit")}
-                className={`px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 ${
-                  basedFilter === "merit"
-                    ? "bg-gradient2 text-white border-transparent"
-                    : "bg-white text-gray-700 border-gray-300 hover:border-primary"
-                }`}
-              >
-                Merit-based
-              </button>
-              <button
-                type="button"
-                onClick={() => handleBasedFilterChange("both")}
-                className={`px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 ${
-                  basedFilter === "both"
-                    ? "bg-gradient2 text-white border-transparent"
-                    : "bg-white text-gray-700 border-gray-300 hover:border-primary"
-                }`}
-              >
-                Need + Merit / Both
-              </button>
+        {/* SEARCH & FILTER BAR */}
+        <div className="flex flex-col md:flex-row gap-4 mb-10 items-center">
+          <div className="relative flex-1 w-full">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
             </div>
+            <input
+              type="text"
+              placeholder="Search by name, eligibility..."
+              className="block w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              value={searchQuery}
+              onChange={handleFilteredSearch}
+            />
           </div>
 
-          {/* STATUS MESSAGE */}
-          <div className="mt-4 text-sm text-gray-600">
-            {isLoading && <span>Loading scholarships…</span>}
-            {!isLoading && !error && (
-              <span>
-                Showing{" "}
-                <span className="font-semibold">{filteredScholarships.length}</span>{" "}
-                of{" "}
-                <span className="font-semibold">{scholarships.length}</span>{" "}
-                scholarships
-              </span>
-            )}
-            {error && <span className="text-red-600">{error}</span>}
+          <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+            {[
+              { id: 'all', label: 'All' },
+              { id: 'need', label: 'Need-based' },
+              { id: 'merit', label: 'Merit-based' },
+              { id: 'both', label: 'Both' }
+            ].map((filter) => (
+              <button
+                key={filter.id}
+                onClick={() => setBasedFilter(filter.id)}
+                className={`px-6 py-3.5 rounded-xl font-medium text-sm whitespace-nowrap transition-all duration-200 border ${basedFilter === filter.id
+                    ? "bg-gray-900 text-white border-gray-900 shadow-md"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                  }`}
+              >
+                {filter.label}
+              </button>
+            ))}
           </div>
-        </section>
+        </div>
 
-        {/* LIST */}
-        <section className="space-y-6">
-          {!isLoading && !error && filteredScholarships.length === 0 && (
-            <div className="text-center text-gray-600 bg-white rounded-xl py-12 shadow-sm border border-dashed border-gray-300">
-              <p className="text-lg font-medium mb-1">
-                No scholarships match your search yet.
-              </p>
-              <p className="text-sm">
-                Try changing your keywords or clearing some filters.
-              </p>
+        {/* CONTENT AREA */}
+        <div className="min-h-[400px]">
+          {isLoading && (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
           )}
 
-          {filteredScholarships.map((sch) => {
-            const isExpanded = expandedCards.has(sch.id);
-            const descriptionPreview = sch.description
-              ? sch.description.length > 150
-                ? sch.description.substring(0, 150) + "..."
-                : sch.description
-              : null;
-
-            return (
-              <article
-                key={sch.id}
-                className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 p-5 md:p-6"
+          {!isLoading && !error && filteredScholarships.length === 0 && (
+            <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-50 mb-4">
+                <svg className="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-1">No scholarships found</h3>
+              <p className="text-gray-500">Try adjusting your search or filters to find what you're looking for.</p>
+              <button
+                onClick={() => { setSearchQuery(""); setBasedFilter("all"); }}
+                className="mt-4 text-primary font-medium hover:underline"
               >
-                <header className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-3 mb-3">
-                  <div className="flex-1">
-                    <h2 className="text-2xl font-semibold text-gray-900">
-                      {sch.name}
-                    </h2>
-                    {sch.website && (
-                      <div className="mt-1 text-sm">
-                        {renderWebsiteLink(sch.website)}
-                      </div>
-                    )}
-                  </div>
+                Clear all filters
+              </button>
+            </div>
+          )}
 
-                  <div className="flex flex-wrap gap-2">
+          {/* CARDS GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredScholarships.map((sch) => (
+              <div
+                key={sch.id}
+                className="group bg-white rounded-2xl p-6 border border-gray-100 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 flex flex-col h-full"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex gap-2">
                     {sch.based && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-medium border border-blue-100">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold uppercase tracking-wide ${sch.based.toLowerCase().includes('merit')
+                          ? 'bg-purple-50 text-purple-700'
+                          : sch.based.toLowerCase().includes('need')
+                            ? 'bg-amber-50 text-amber-700'
+                            : 'bg-blue-50 text-blue-700'
+                        }`}>
                         {sch.based}
                       </span>
                     )}
-                    {sch.deadline && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-orange-50 text-orange-700 text-xs font-medium border border-orange-100">
-                        Deadline: {sch.deadline}
-                      </span>
-                    )}
-                    {sch.award && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-100">
-                        Award: {sch.award}
-                      </span>
-                    )}
                   </div>
-                </header>
-
-                {descriptionPreview && (
-                  <p className="text-gray-700 text-sm md:text-base mb-4">
-                    {isExpanded && sch.description
-                      ? sch.description
-                      : descriptionPreview}
-                  </p>
-                )}
-
-                {isExpanded && (
-                  <div className="grid gap-4 md:grid-cols-3 text-sm mt-4 pt-4 border-t border-gray-200">
-                    {sch.eligibility && (
-                      <div>
-                        <h3 className="font-semibold text-gray-900 mb-1">
-                          Eligibility
-                        </h3>
-                        <p className="text-gray-700">{sch.eligibility}</p>
-                      </div>
-                    )}
-
-                    {sch.requirements && (
-                      <div>
-                        <h3 className="font-semibold text-gray-900 mb-1">
-                          Key requirements
-                        </h3>
-                        <p className="text-gray-700">{sch.requirements}</p>
-                      </div>
-                    )}
-
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">
-                        Contact
-                      </h3>
-                      <p className="text-gray-700">
-                        {sch.email && (
-                          <>
-                            <span className="font-medium">Email: </span>
-                            {sch.email}
-                            <br />
-                          </>
-                        )}
-                        {sch.phone && (
-                          <>
-                            <span className="font-medium">Phone: </span>
-                            {sch.phone}
-                          </>
-                        )}
-                        {!sch.email && !sch.phone && (
-                          <span className="text-gray-500">
-                            See website for contact details.
-                          </span>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                <div className="mt-4">
-                  <button
-                    onClick={() => toggleCardExpansion(sch.id)}
-                    className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors duration-200 flex items-center gap-1"
-                  >
-                    {isExpanded ? (
-                      <>
-                        <span>Show less</span>
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 15l7-7 7 7"
-                          />
-                        </svg>
-                      </>
-                    ) : (
-                      <>
-                        <span>More</span>
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 9l-7 7-7-7"
-                          />
-                        </svg>
-                      </>
-                    )}
-                  </button>
+                  {/* Placeholder for "Applied" status or similar badge if we had state for it */}
                 </div>
-              </article>
-            );
-          })}
-        </section>
+
+                <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                  {sch.name}
+                </h3>
+
+                <div className="space-y-3 mb-6 flex-grow">
+                  <div className="flex items-center text-sm text-gray-600">
+                    <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="truncate">Deadline: {sch.deadline || 'Open'}</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-600">
+                    <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="truncate">Award: {sch.award || 'Varies'}</span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setSelectedScholarship(sch)}
+                  className="w-full py-3 bg-gray-50 hover:bg-gray-100 text-gray-900 font-semibold rounded-xl transition-colors duration-200 border border-gray-100 flex items-center justify-center group/btn"
+                >
+                  See Details
+                  <svg className="w-4 h-4 ml-2 text-gray-400 group-hover/btn:text-gray-900 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
       </main>
 
       <Footer />
+
+      {/* MODAL */}
+      {selectedScholarship && (
+        <ScholarshipModal
+          scholarship={selectedScholarship}
+          onClose={() => setSelectedScholarship(null)}
+        />
+      )}
     </div>
   );
 };
 
 export default Scholarships;
+
 
