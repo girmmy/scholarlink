@@ -69,11 +69,12 @@ const Scholarships = () => {
 
       <main className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* HEADER SECTION */}
-        <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        {/* HEADER SECTION */}
+        <div className="mb-16 flex flex-col items-center justify-center mx-auto max-w-3xl px-4">
+          <h1 className="text-gradient2 text-center mt-4 text-5xl font-bold">
             Explore Scholarships
           </h1>
-          <p className="text-gray-600 text-lg max-w-2xl">
+          <p className="text-black text-center mt-8 text-xl">
             Find the perfect financial support for your education. Search through our curated list of opportunities.
           </p>
         </div>
@@ -106,8 +107,8 @@ const Scholarships = () => {
                 key={filter.id}
                 onClick={() => setBasedFilter(filter.id)}
                 className={`px-6 py-3.5 rounded-xl font-medium text-sm whitespace-nowrap transition-all duration-200 border ${basedFilter === filter.id
-                    ? "bg-gray-900 text-white border-gray-900 shadow-md"
-                    : "bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                  ? "bg-gray-900 text-white border-gray-900 shadow-md"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                   }`}
               >
                 {filter.label}
@@ -153,10 +154,10 @@ const Scholarships = () => {
                   <div className="flex gap-2">
                     {sch.based && (
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold uppercase tracking-wide ${sch.based.toLowerCase().includes('merit')
-                          ? 'bg-purple-50 text-purple-700'
-                          : sch.based.toLowerCase().includes('need')
-                            ? 'bg-amber-50 text-amber-700'
-                            : 'bg-blue-50 text-blue-700'
+                        ? 'bg-purple-50 text-purple-700'
+                        : sch.based.toLowerCase().includes('need')
+                          ? 'bg-amber-50 text-amber-700'
+                          : 'bg-blue-50 text-blue-700'
                         }`}>
                         {sch.based}
                       </span>
