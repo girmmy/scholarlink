@@ -71,10 +71,10 @@ const Scholarships = () => {
         {/* HEADER SECTION */}
         {/* HEADER SECTION */}
         <div className="mb-16 flex flex-col items-center justify-center mx-auto max-w-3xl px-4">
-          <h1 className="text-gradient2 text-center mt-4 text-5xl font-bold">
+          <h1 className="text-gradient2 text-center mt-10 text-6xl font-bold">
             Explore Scholarships
           </h1>
-          <p className="text-black text-center mt-8 text-xl">
+          <p className="text-black text-center mt-10 text-xl">
             Find the perfect financial support for your education. Search through our curated list of opportunities.
           </p>
         </div>
