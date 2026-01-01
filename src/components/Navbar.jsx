@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import { FaBars, FaTimes } from "react-icons/fa";
 import { auth } from "../config/firebase";
 import logo from "../assets/scholarlink-transparent.svg";
 
 function Navbar() {
   const [user, setUser] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -35,7 +41,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="flex fixed left-0 right-0 z-50 flex-row items-center justify-between p-4 md:p-6 bg-white shadow-md">
+    <nav className="flex fixed left-0 right-0 z-50 flex-row items-center justify-between p-4 md:p-6 bg-white shadow-md relative">
       <Link to="/">
         <img src={logo} className="h-8 md:h-10" alt="Scholarlink Logo" />
       </Link>
@@ -47,18 +53,6 @@ function Navbar() {
           className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
         >
           Scholarships
-        </Link>
-        <Link
-          to="/references"
-          className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
-        >
-          References
-        </Link>
-        <Link
-          to="/contact"
-          className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
-        >
-          Contact
         </Link>
         {user ? (
           <div className="relative group">
@@ -124,15 +118,8 @@ function Navbar() {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="absolute top-full left-0 right-0 bg-white shadow-lg md:hidden">
+        <div className="absolute top-full left-0 right-0 bg-white shadow-lg md:hidden z-40">
           <div className="flex flex-col p-4 gap-4">
-            <Link
-              to="/profile"
-              className="text-gray-950 hover:text-blue-600 transition-colors py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Profile
-            </Link>
             <Link
               to="/scholarships"
               className="text-gray-700 hover:text-blue-600 transition-colors py-2"
@@ -140,29 +127,36 @@ function Navbar() {
             >
               Scholarships
             </Link>
-            <Link
-              to="/references"
-              className="text-gray-700 hover:text-blue-600 transition-colors py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              References
-            </Link>
-            <Link
-              to="/contact"
-              className="text-gray-700 hover:text-blue-600 transition-colors py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Contact
-            </Link>
-            <Link
-              to="/sign-up"
-              className="py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <button className="hover:bg-gradient1 bg-white hover:text-white hover:outline-none transition-all duration-200 border-black-100 rounded-2xl px-4 py-2 outline text-black w-full">
-                Signup/Login
-              </button>
-            </Link>
+            {user ? (
+              <>
+                <Link
+                  to="/profile"
+                  className="text-gray-700 hover:text-blue-600 transition-colors py-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Profile
+                </Link>
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    handleLogout();
+                  }}
+                  className="text-left text-gray-700 hover:text-blue-600 transition-colors py-2"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <button className="hover:bg-gradient1 bg-white hover:text-white hover:outline-none transition-all duration-200 border-black-100 rounded-2xl px-4 py-2 outline text-black w-full">
+                  Login
+                </button>
+              </Link>
+            )}
           </div>
         </div>
       )}

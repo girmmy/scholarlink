@@ -310,7 +310,14 @@ function Home() {
                         {scholarship.based && (
                           <span
                             className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold uppercase tracking-wide ${
-                              scholarship.based.toLowerCase().includes("merit")
+                              scholarship.based
+                                .toLowerCase()
+                                .includes("need & merit") ||
+                              scholarship.based.toLowerCase().includes("both")
+                                ? "bg-indigo-50 text-indigo-700"
+                                : scholarship.based
+                                    .toLowerCase()
+                                    .includes("merit")
                                 ? "bg-purple-50 text-purple-700"
                                 : scholarship.based
                                     .toLowerCase()

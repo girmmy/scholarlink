@@ -21,7 +21,7 @@ const Scholarships = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [scholarships, setScholarships] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [basedFilter, setBasedFilter] = useState("all"); // all | need | merit | both
+  const [basedFilter, setBasedFilter] = useState("all"); // all | need | merit | both (for filter button, but data uses "NEED & MERIT BASED")
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedScholarship, setSelectedScholarship] = useState(null);
@@ -196,7 +196,7 @@ const Scholarships = () => {
         return basedValue.includes("merit");
       }
       if (basedFilter === "both") {
-        return basedValue.includes("both");
+        return basedValue.includes("both") || basedValue.includes("NEED & MERIT BASED");
       }
 
       return true; // "all"
@@ -330,7 +330,9 @@ const Scholarships = () => {
                       {sch.based && (
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold uppercase tracking-wide ${
-                            sch.based.toLowerCase().includes("merit")
+                            sch.based.toLowerCase().includes("need & merit") || sch.based.toLowerCase().includes("both")
+                              ? "bg-indigo-50 text-indigo-700"
+                              : sch.based.toLowerCase().includes("merit")
                               ? "bg-purple-50 text-purple-700"
                               : sch.based.toLowerCase().includes("need")
                               ? "bg-amber-50 text-amber-700"

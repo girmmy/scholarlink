@@ -42,9 +42,9 @@ try {
   app = null;
 }
 
-// Initialize Analytics only if in browser and measurementId exists
+// Initialize Analytics only if in browser and measurementId exists and app is initialized
 let analytics = null;
-if (typeof window !== "undefined" && firebaseConfig.measurementId) {
+if (typeof window !== "undefined" && firebaseConfig.measurementId && app) {
   try {
     analytics = getAnalytics(app);
   } catch (error) {
