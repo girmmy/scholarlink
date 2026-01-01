@@ -5,6 +5,7 @@ import Scholarships from "./pages/Scholarships";
 import Profile from "./pages/Profile";
 import References from "./pages/References";
 import Signup from "./pages/Signup";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -15,12 +16,17 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/references" element={<References />} />
         <Route path="/sign-up" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );
 }
 
 export default App;
+
+
+
+
 
 
 

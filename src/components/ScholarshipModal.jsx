@@ -1,7 +1,18 @@
 import React from "react";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
-const ScholarshipModal = ({ scholarship, onClose }) => {
+const ScholarshipModal = ({ scholarship, onClose, user, favoriteIds, onToggleFavorite, navigate }) => {
   if (!scholarship) return null;
+
+  const isFavorited = favoriteIds?.has(scholarship.id.toString());
+
+  const handleFavoriteClick = () => {
+    if (!user) {
+      navigate?.("/sign-up");
+      return;
+    }
+    onToggleFavorite?.(scholarship);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
@@ -12,18 +23,37 @@ const ScholarshipModal = ({ scholarship, onClose }) => {
       >
         {/* Header with blue top border/accent logic if needed, but keeping it clean for now */}
         <div className="relative p-6 md:p-8 space-y-6">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
-            aria-label="Close modal"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          <div className="absolute top-4 right-4 flex gap-2">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleFavoriteClick();
+              }}
+              className="p-2 text-red-500 hover:text-red-600 rounded-full hover:bg-red-50 transition-colors z-10"
+              title={user ? (isFavorited ? "Remove from favorites" : "Add to favorites") : "Sign in to favorite"}
+              aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
+            >
+              {isFavorited ? (
+                <FaHeart size={24} />
+              ) : (
+                <FaRegHeart size={24} />
+              )}
+            </button>
+            <button
+              onClick={onClose}
+              className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
+              aria-label="Close modal"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
 
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">{scholarship.name}</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2 pr-16">{scholarship.name}</h2>
             <div className="flex flex-wrap gap-4 text-sm text-gray-600 mt-3">
               <div className="flex items-center gap-1.5">
                 <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
