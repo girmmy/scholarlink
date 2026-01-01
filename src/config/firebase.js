@@ -53,12 +53,18 @@ if (typeof window !== "undefined" && firebaseConfig.measurementId) {
 }
 
 // Only initialize auth and db if app was successfully created
+// Initialize auth FIRST as it's the primary service
 let auth = null;
 let db = null;
 
 if (app) {
   try {
+    // Initialize auth first (primary service)
     auth = getAuth(app);
+    // Set auth persistence to ensure it's the main auth method
+    auth.languageCode = 'en';
+    
+    // Then initialize Firestore (depends on auth for security rules)
     db = getFirestore(app);
   } catch (error) {
     console.error('Error initializing Firebase services:', error);
