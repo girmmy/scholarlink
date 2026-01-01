@@ -194,6 +194,8 @@ const Signup = () => {
       navigate("/");
     } catch (error) {
       console.error("Google signup error:", error);
+      console.error("Error code:", error.code);
+      console.error("Error message:", error.message);
 
       let errorMessage =
         "An error occurred during Google sign-in. Please try again.";
@@ -209,8 +211,24 @@ const Signup = () => {
         case "auth/network-request-failed":
           errorMessage = "Network error. Please check your connection.";
           break;
+        case "auth/unauthorized-domain":
+          errorMessage = "This domain is not authorized for Google sign-in. Please contact support.";
+          console.error("Domain authorization error. Make sure your production domain is added to Firebase Console > Authentication > Settings > Authorized domains");
+          break;
+        case "auth/operation-not-allowed":
+          errorMessage = "Google sign-in is not enabled. Please contact support.";
+          console.error("Google sign-in method not enabled in Firebase Console");
+          break;
+        case "auth/configuration-not-found":
+          errorMessage = "Firebase configuration error. Please contact support.";
+          console.error("Firebase configuration error. Check environment variables in Netlify");
+          break;
         default:
           errorMessage = error.message || errorMessage;
+          // Log full error for debugging
+          if (error.code) {
+            console.error("Unhandled error code:", error.code);
+          }
       }
 
       setAuthError(errorMessage);

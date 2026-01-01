@@ -74,7 +74,17 @@ if (app) {
 }
 
 // Initialize Google Auth Provider
-const googleProvider = app ? new GoogleAuthProvider() : null;
+let googleProvider = null;
+if (app) {
+  googleProvider = new GoogleAuthProvider();
+  // Add scopes if needed
+  googleProvider.addScope('profile');
+  googleProvider.addScope('email');
+  // Set custom parameters
+  googleProvider.setCustomParameters({
+    prompt: 'select_account'
+  });
+}
 
 // Export Firebase services for use in other components
 export { app, analytics, auth, db, googleProvider };
