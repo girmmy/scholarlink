@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../assets/logo-transparent.svg";
+import logo from "../assets/scholarlink-transparent.svg";
 import {
   FaXTwitter,
   FaYoutube,

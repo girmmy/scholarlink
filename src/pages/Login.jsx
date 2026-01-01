@@ -2,20 +2,14 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-  signInWithPopup,
-} from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db, googleProvider } from "../config/firebase";
 
-const Signup = () => {
+const Login = () => {
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -40,10 +34,6 @@ const Signup = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
-    }
-
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -52,12 +42,6 @@ const Signup = () => {
 
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
     }
 
     setErrors(newErrors);
@@ -67,7 +51,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setAuthError("");
-
+    
     if (!validateForm()) {
       return;
     }
@@ -77,79 +61,58 @@ const Signup = () => {
     try {
       // Check if Firebase auth is available
       if (!auth) {
-        throw new Error(
-          "Firebase is not configured. Please check your environment variables."
-        );
+        throw new Error("Firebase is not configured. Please check your environment variables.");
       }
 
-      // Create user with email and password
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        formData.email,
-        formData.password
-      );
+      // Sign in user with email and password
+      await signInWithEmailAndPassword(auth, formData.email, formData.password);
 
-      const user = userCredential.user;
-
-      // Update user profile with display name
-      await updateProfile(user, {
-        displayName: formData.name,
-      });
-
-      // Save additional user data to Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        name: formData.name,
-        email: formData.email,
-        createdAt: new Date().toISOString(),
-      });
-
-      // Navigate to home page after successful signup
+      // Navigate to home page after successful login
       navigate("/");
     } catch (error) {
-      console.error("Signup error:", error);
-
+      console.error("Login error:", error);
+      
       // Handle different Firebase auth errors
-      let errorMessage = "An error occurred during signup. Please try again.";
-
+      let errorMessage = "An error occurred during login. Please try again.";
+      
       switch (error.code) {
-        case "auth/email-already-in-use":
-          errorMessage =
-            "This email is already registered. Please login instead.";
+        case "auth/user-not-found":
+          errorMessage = "No account found with this email address.";
+          break;
+        case "auth/wrong-password":
+          errorMessage = "Incorrect password. Please try again.";
           break;
         case "auth/invalid-email":
           errorMessage = "Invalid email address.";
           break;
-        case "auth/weak-password":
-          errorMessage =
-            "Password is too weak. Please use a stronger password.";
+        case "auth/user-disabled":
+          errorMessage = "This account has been disabled.";
+          break;
+        case "auth/too-many-requests":
+          errorMessage = "Too many failed attempts. Please try again later.";
           break;
         case "auth/network-request-failed":
           errorMessage = "Network error. Please check your connection.";
           break;
         case "auth/configuration-not-found":
-          errorMessage =
-            "Firebase configuration error. Please contact support or check your environment setup.";
-          console.error(
-            "Firebase configuration error. Make sure all environment variables are set in .env file"
-          );
+          errorMessage = "Firebase configuration error. Please contact support or check your environment setup.";
+          console.error("Firebase configuration error. Make sure all environment variables are set in .env file");
           break;
         default:
           errorMessage = error.message || errorMessage;
       }
-
+      
       setAuthError(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGoogleSignup = async () => {
+  const handleGoogleLogin = async () => {
     setAuthError("");
-
+    
     if (!auth || !googleProvider) {
-      setAuthError(
-        "Google sign-in is not available. Please check your Firebase configuration."
-      );
+      setAuthError("Google sign-in is not available. Please check your Firebase configuration.");
       return;
     }
 
@@ -181,30 +144,25 @@ const Signup = () => {
           }
         } catch (firestoreError) {
           // If Firestore fails (offline, etc.), log but don't block sign-in
-          console.warn(
-            "Firestore operation failed, but sign-in succeeded:",
-            firestoreError
-          );
+          console.warn("Firestore operation failed, but sign-in succeeded:", firestoreError);
           // User is still signed in, just Firestore sync failed
           // This will be retried when they access their profile
         }
       }
 
-      // Navigate to home page after successful signup
+      // Navigate to home page after successful login
       navigate("/");
     } catch (error) {
-      console.error("Google signup error:", error);
-
-      let errorMessage =
-        "An error occurred during Google sign-in. Please try again.";
-
+      console.error("Google login error:", error);
+      
+      let errorMessage = "An error occurred during Google sign-in. Please try again.";
+      
       switch (error.code) {
         case "auth/popup-closed-by-user":
           errorMessage = "Sign-in popup was closed. Please try again.";
           break;
         case "auth/popup-blocked":
-          errorMessage =
-            "Popup was blocked by your browser. Please allow popups for this site.";
+          errorMessage = "Popup was blocked by your browser. Please allow popups for this site.";
           break;
         case "auth/network-request-failed":
           errorMessage = "Network error. Please check your connection.";
@@ -212,7 +170,7 @@ const Signup = () => {
         default:
           errorMessage = error.message || errorMessage;
       }
-
+      
       setAuthError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -227,10 +185,10 @@ const Signup = () => {
         <div className="w-full max-w-md">
           <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-200">
             <h2 className="text-gradient1 text-center text-3xl sm:text-4xl font-bold mb-2">
-              Create an Account
+              Welcome Back
             </h2>
             <p className="text-gray-600 text-center mb-6 sm:mb-8 text-sm sm:text-base">
-              Join Scholarlink to discover opportunities
+              Login to your Scholarlink account
             </p>
 
             {/* Auth Error Message */}
@@ -241,32 +199,6 @@ const Signup = () => {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-              {/* Name Field */}
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border text-sm sm:text-base ${
-                    errors.name
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-300 focus:border-secondary"
-                  } focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all`}
-                  placeholder="Enter your full name"
-                />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-500">{errors.name}</p>
-                )}
-              </div>
-
               {/* Email Field */}
               <div>
                 <label
@@ -312,39 +244,21 @@ const Signup = () => {
                       ? "border-red-500 focus:border-red-500"
                       : "border-gray-300 focus:border-secondary"
                   } focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all`}
-                  placeholder="Create a password"
+                  placeholder="Enter your password"
                 />
                 {errors.password && (
                   <p className="mt-1 text-sm text-red-500">{errors.password}</p>
                 )}
               </div>
 
-              {/* Confirm Password Field */}
-              <div>
-                <label
-                  htmlFor="confirmPassword"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+              {/* Forgot Password Link */}
+              <div className="flex justify-end">
+                <Link
+                  to="#"
+                  className="text-sm text-secondary hover:text-primary transition-colors"
                 >
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border text-sm sm:text-base ${
-                    errors.confirmPassword
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-300 focus:border-secondary"
-                  } focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all`}
-                  placeholder="Confirm your password"
-                />
-                {errors.confirmPassword && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.confirmPassword}
-                  </p>
-                )}
+                  Forgot password?
+                </Link>
               </div>
 
               {/* Submit Button */}
@@ -375,10 +289,10 @@ const Signup = () => {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    Creating Account...
+                    Logging in...
                   </span>
                 ) : (
-                  "Sign Up"
+                  "Login"
                 )}
               </button>
             </form>
@@ -389,15 +303,13 @@ const Signup = () => {
                 <div className="w-full border-t border-gray-300"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  Or continue with
-                </span>
+                <span className="px-2 bg-white text-gray-500">Or continue with</span>
               </div>
             </div>
 
             {/* Google Sign In Button */}
             <button
-              onClick={handleGoogleSignup}
+              onClick={handleGoogleLogin}
               disabled={isLoading}
               className="w-full flex items-center justify-center gap-3 px-4 py-2.5 sm:py-3 border-2 border-gray-300 rounded-xl font-semibold text-base sm:text-lg hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -419,18 +331,18 @@ const Signup = () => {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                 />
               </svg>
-              Sign up with Google
+              Sign in with Google
             </button>
 
-            {/* Login Link */}
+            {/* Signup Link */}
             <div className="mt-6 text-center">
               <p className="text-gray-600">
-                Already have an account?{" "}
+                Don't have an account?{" "}
                 <Link
-                  to="/login"
+                  to="/sign-up"
                   className="text-secondary font-semibold hover:text-primary transition-colors"
                 >
-                  Login
+                  Sign Up
                 </Link>
               </p>
             </div>
@@ -443,4 +355,5 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;
+
