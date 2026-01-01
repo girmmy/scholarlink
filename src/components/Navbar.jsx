@@ -63,6 +63,24 @@ function Navbar() {
         >
           Scholarships
         </Link>
+        <Link
+          to="/calendar"
+          className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
+        >
+          Calendar
+        </Link>
+        <Link
+          to="/references"
+          className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
+        >
+          References
+        </Link>
+        <Link
+          to="/contact"
+          className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
+        >
+          Contact
+        </Link>
         {user ? (
           <div className="relative group">
             <Link to="/profile" className="flex items-center">
@@ -135,6 +153,27 @@ function Navbar() {
               onClick={() => setIsMenuOpen(false)}
             >
               Scholarships
+            </Link>
+            <Link
+              to="/calendar"
+              className="text-gray-700 hover:text-blue-600 transition-colors py-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Calendar
+            </Link>
+            <Link
+              to="/references"
+              className="text-gray-700 hover:text-blue-600 transition-colors py-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              References
+            </Link>
+            <Link
+              to="/contact"
+              className="text-gray-700 hover:text-blue-600 transition-colors py-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Contact
             </Link>
             {user ? (
               <>
