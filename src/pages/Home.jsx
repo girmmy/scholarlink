@@ -261,7 +261,7 @@ function Home() {
       <Navbar />
       <main>
         {/* HERO SECTION */}
-        <div className="min-h-[60vh] mt-20 flex flex-col bg-slate-200 px-4 pb-12">
+        <div className="min-h-[60vh] flex flex-col bg-slate-200 px-4 pb-12">
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-gradient1 text-center mx-auto pt-12 sm:pt-16 md:pt-20 pb-6 sm:pb-8 font-bold">
             Connecting Scholars, <br />
             Expanding Opportunities
