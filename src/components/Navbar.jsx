@@ -15,6 +15,11 @@ function Navbar() {
   };
 
   useEffect(() => {
+    if (!auth) {
+      console.warn("Firebase auth not initialized");
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
@@ -23,6 +28,10 @@ function Navbar() {
   }, []);
 
   const handleLogout = async () => {
+    if (!auth) {
+      console.warn("Firebase auth not initialized");
+      return;
+    }
     try {
       await signOut(auth);
       navigate("/");

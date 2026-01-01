@@ -28,6 +28,12 @@ const Profile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!auth) {
+      console.warn("Firebase auth not initialized");
+      navigate("/login");
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);

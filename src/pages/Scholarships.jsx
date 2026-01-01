@@ -39,6 +39,11 @@ const Scholarships = () => {
 
   // Load user and favorites
   useEffect(() => {
+    if (!auth) {
+      console.warn("Firebase auth not initialized");
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
