@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Link, useNavigate } from "react-router-dom";
+import blueFaintBg from "../assets/blue-faint-bg.png";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db, googleProvider } from "../config/firebase";
@@ -196,7 +197,12 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen flex flex-col">
+    <div 
+      className="min-h-screen flex flex-col bg-cover bg-center bg-no-repeat relative"
+      style={{ backgroundImage: `url(${blueFaintBg})` }}
+    >
+      <div className="absolute inset-0 bg-black/10"></div>
+      <div className="relative z-10 flex flex-col min-h-screen">
       <Navbar />
 
       <main className="flex-grow flex items-center justify-center pt-24 pb-12 px-4 sm:pt-32 sm:pb-16">
@@ -369,6 +375,7 @@ const Login = () => {
       </main>
 
       <Footer />
+      </div>
     </div>
   );
 };

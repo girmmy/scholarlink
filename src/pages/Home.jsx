@@ -15,7 +15,9 @@ import { auth, db } from "../config/firebase";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
-import studentImage from "../assets/gim1.png";
+import tomiImage from "../assets/tomi.jpg";
+import priyaImage from "../assets/priya.png";
+import blueFaintBg from "../assets/blue-faint-bg.png";
 import SearchBar from "../components/SearchBar";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import ScholarshipModal from "../components/ScholarshipModal";
@@ -259,21 +261,27 @@ function Home() {
   return (
     <div className="bg-gray-50 overflow-hidden">
       <Navbar />
-      <main>
+      <main className="pt-16 md:pt-20">
         {/* HERO SECTION */}
-        <div className="min-h-[60vh] flex flex-col bg-slate-200 px-4 pb-12">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-gradient1 text-center mx-auto pt-12 sm:pt-16 md:pt-20 pb-6 sm:pb-8 font-bold">
-            Connecting Scholars, <br />
-            Expanding Opportunities
-          </h1>
-          <p className="text-gray-600 text-base sm:text-lg md:text-xl my-4 sm:my-5 text-center mx-auto max-w-2xl px-4">
-            Discover and apply for scholarships that match your goals. Connect
-            with opportunities that can help fund your education.
-          </p>
+        <div
+          className="min-h-[60vh] flex flex-col px-4 pb-12 bg-cover bg-center bg-no-repeat relative"
+          style={{ backgroundImage: `url(${blueFaintBg})` }}
+        >
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="relative z-10 flex flex-col">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-gradient1 text-center mx-auto pt-8 sm:pt-12 md:pt-16 pb-6 sm:pb-8 font-bold">
+              Connecting Scholars, <br />
+              Expanding Opportunities
+            </h1>
+            <p className="text-gray-600 text-base sm:text-lg md:text-xl my-4 sm:my-5 text-center mx-auto max-w-2xl px-4">
+              Discover and apply for scholarships that match your goals. Connect
+              with opportunities that can help fund your education.
+            </p>
 
-          {/* SEARCH BAR */}
-          <div className="mt-6 sm:mt-8 mb-4">
-            <SearchBar />
+            {/* SEARCH BAR */}
+            <div className="mt-6 sm:mt-8 mb-4">
+              <SearchBar />
+            </div>
           </div>
         </div>
 
@@ -441,16 +449,16 @@ function Home() {
           {/* STUDENT CARDS */}
 
           {/* STUDENT CARD 1 */}
-          <div className="outline mb-12 md:mb-16 rounded-xl p-4 md:p-5 flex flex-col md:flex-row gap-6 md:gap-16 items-stretch">
-            <div className="rounded-xl w-full md:w-auto md:flex-shrink-0">
+          <div className="outline mb-12 md:mb-16 rounded-xl p-4 md:p-5 flex flex-col md:flex-row gap-6 md:gap-16 items-stretch min-h-[400px] md:min-h-[350px]">
+            <div className="rounded-xl w-full md:w-[300px] md:flex-shrink-0">
               <img
-                className="w-full h-64 md:h-full md:max-h-[300px] rounded-xl object-cover"
-                src={studentImage}
+                className="w-full h-60 md:h-[300px] rounded-xl object-cover"
+                src={tomiImage}
                 alt="student"
               />
             </div>
 
-            <div>
+            <div className="flex flex-col justify-center flex-1">
               <h3 className="text-3xl font-bold pb-1 ">Tomi Odugbemi</h3>
               <h3 className="text-xl  pb-3 ">
                 Georgia Institute of Technology
@@ -467,25 +475,27 @@ function Home() {
           </div>
 
           {/* STUDENT CARD 2 */}
-          <div className="outline rounded-xl p-4 md:p-5 flex flex-col md:flex-row-reverse gap-6 md:gap-16 items-stretch">
-            <div className="rounded-xl w-full md:w-auto md:flex-shrink-0">
+          <div className="outline rounded-xl p-4 md:p-5 flex flex-col md:flex-row-reverse gap-6 md:gap-16 items-stretch min-h-[400px] md:min-h-[350px]">
+            <div className="rounded-xl w-full md:w-[300px] md:flex-shrink-0">
               <img
-                className="w-full h-64 md:h-full md:max-h-[300px] rounded-xl object-cover"
-                src={studentImage}
+                className="w-full h-60 md:h-[300px] rounded-xl object-cover"
+                src={priyaImage}
                 alt="student"
               />
             </div>
 
-            <div>
-              <h3 className="text-3xl font-bold pb-1 ">Nathan Le</h3>
-              <h3 className="text-xl  pb-3 ">University of Georgia</h3>
+            <div className="flex flex-col justify-center flex-1">
+              <h3 className="text-3xl font-bold pb-1 ">Priyavrata Deb</h3>
+              <h3 className="text-xl  pb-3 ">
+                Massachusetts Institute of Technology
+              </h3>
               <p className="text-md text-wrap">
-                Nathan used Scholarlink to find need-based scholarships that
-                aligned with his background in business administration. The
+                Priyavrata used Scholarlink to find need-based scholarships that
+                aligned with his background in computer engineering. The
                 platform's filtering system helped him identify opportunities
                 specifically for first-generation college students, leading to a
-                full-tuition scholarship at the University of Georgia that made
-                his dream of higher education a reality.
+                full-tuition scholarship at MIT that made his dream of higher
+                education a reality.
               </p>
             </div>
           </div>

@@ -50,7 +50,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="flex fixed left-0 right-0 z-50 flex-row items-center justify-between p-4 md:p-6 bg-white shadow-md relative">
+    <nav className="flex fixed left-0 right-0 z-50 flex-row items-center justify-between p-4 md:p-6 bg-white shadow-md">
       <Link to="/">
         <img src={logo} className="h-8 md:h-10" alt="Scholarlink Logo" />
       </Link>
@@ -103,9 +103,7 @@ function Navbar() {
                   <p className="text-sm font-semibold text-gray-900 truncate">
                     {user.displayName || "User"}
                   </p>
-                  <p className="text-xs text-gray-500 truncate">
-                    {user.email}
-                  </p>
+                  <p className="text-xs text-gray-500 truncate">{user.email}</p>
                 </div>
                 <Link
                   to="/profile"
