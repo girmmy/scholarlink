@@ -47,7 +47,7 @@ const Contact = () => {
         <Navbar />
         <main className="flex-grow pt-20 md:pt-24">
           <div className="container mx-auto px-4 py-16 max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold text-gradient1 mb-8">
+            <h1 className="text-4xl md:text-5xl font-bold text-gradient1 mb-8 text-center">
               Contact
             </h1>
             <div className="bg-white rounded-2xl shadow-lg p-8 md:p-10">

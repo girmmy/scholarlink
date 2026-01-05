@@ -8,7 +8,7 @@
     "deadline": "February 13,2026",
     "award": "$2,500-3,000",
     "based": "NEED & MERIT BASED",
-    "website": "Grants & Scholarships – RMHC of the Southwest",
+    "website": "https://www.rmhcsouthwest.com/grants-scholarships/",
     "phone": "(866) 664-0236",
     "email": "N/A",
     "requirements": "Highschool Transcript, Proof of U.S residency, Demonstrated financial need, Evidence of community service"
@@ -36,7 +36,7 @@
     "deadline": "March 2026",
     "award": "$5,000-$30,000 Scholarships, recognition and more things like merch depends on placement",
     "based": "merit",
-    "website": "Doodle For Google Scholarship",
+    "website": "https://doodles.google.com/d4g/",
     "phone": "N/A",
     "email": "doodleforgoogle@google.com",
     "requirements": "original art work, online submission, parent permission, short statement."
@@ -50,7 +50,7 @@
     "deadline": "the deadline for 2026 deadline is in November 2026",
     "award": "Full tuition.",
     "based": "Merit",
-    "website": "Foundation Fellowship - UGA Morehead Honors College",
+    "website": "https://honors.uga.edu/admissions/",
     "phone": "(706) 542-8776",
     "email": "honors@uga.edu",
     "requirements": "Transcript, essay, letter rec, admission app."
@@ -78,7 +78,7 @@
     "deadline": "February 28th 2026",
     "award": "$33,000 'The award follows students through the completion of a bachelor's degree and is renewable each year'",
     "based": "need based",
-    "website": "TheDream.US National Scholarship for Immigrant Students",
+    "website": "https://www.thedream.us/scholarships/",
     "phone": "(202) 846-0042",
     "email": "scholars@thedream.us",
     "requirements": "proof of immigration status,highschool transcript,essay,online app"
@@ -120,7 +120,7 @@
     "deadline": "February 12 26",
     "award": "10,000, 25,000, 50,000",
     "based": "merit",
-    "website": "Davidson Fellows Scholarship Guide (2025-2026) - My Scholar HQ",
+    "website": "https://www.davidsongifted.org/gifted-programs/fellows-scholarship/",
     "phone": "(775) 852-3483",
     "email": "fellows@davidsongifted.org",
     "requirements": "Online App,Research paper,Nomination form,rec letter"
@@ -134,7 +134,7 @@
     "deadline": "nomination-December 17, 2025 Applications fully due-January 11, 2026",
     "award": "$1,000 plus ceremony",
     "based": "merit",
-    "website": "Home - Carson Scholars Fund",
+    "website": "https://carsonscholars.org/scholarships/",
     "phone": "(410) 828-1005",
     "email": "csf@carsonscholars.org",
     "requirements": "letter of rec,essay,community service documentation,nomination, transcript."
@@ -148,7 +148,7 @@
     "deadline": "January 15 2026",
     "award": "2,500-20,000",
     "based": "need",
-    "website": "APIA Scholars 2025-2026 Scholarship Application",
+    "website": "https://apply.mykaleidoscope.com/program/APIAScholarsApplication2627",
     "phone": "(202) 986-6892",
     "email": "info@apiascholars.org",
     "requirements": "Application,Essay,financial documents,transcript,proof of heritage."
@@ -162,7 +162,7 @@
     "deadline": "Sept 15th 2026",
     "award": "covers full cost of attendance",
     "based": "NEED & MERIT BASED",
-    "website": "The Gates Scholarship: Home",
+    "website": "https://www.thegatesscholarship.org/scholarship",
     "phone": "(571) 303-1189",
     "email": "info@thegatesscholarship.org",
     "requirements": "Online apps,transcript,essay, Financial needs proof"
@@ -176,7 +176,7 @@
     "deadline": "March 2026",
     "award": "$1000-$3000",
     "based": "Merit+community service based",
-    "website": "Georgia EMC Scholarships for High School Seniors (Class of 2026) — Verified Links & Deadlines - ScholarshipsandGrants.us",
+    "website": "https://www.cgemc.com/scholarships",
     "phone": "(770) 270-6950",
     "email": "info@georgiaemc.com",
     "requirements": "Transcript, essay, proof of EMC membership, online app."
@@ -190,7 +190,7 @@
     "deadline": "January 5,2026",
     "award": "College scholarships up to $40,000",
     "based": "merit",
-    "website": "How To Apply For The GE-Reagan Foundation Scholarship Program | The Ronald Reagan Presidential Foundation & Institute",
+    "website": "https://apply.mykaleidoscope.com/program/GEReagan2026Scholarship",
     "phone": "805-522-2977",
     "email": "info@reaganfoundation.org",
     "requirements": "There are very specific steps you need to take while making the application regarding this scholarship. Info is provided on the website."
@@ -218,24 +218,10 @@
     "deadline": "Drawing throughout 2026",
     "award": "$500-$40,000",
     "based": "both but mostly need",
-    "website": "BigFuture Scholarships: Earn by Planning for College and Career - BigFuture | College Board",
+    "website": "https://bigfuture.collegeboard.org/pay-for-college/bigfuture-scholarships",
     "phone": "(866) 756-7346",
     "email": "bigfuture@collegeboard.org",
     "requirements": "Nothing you just need to apply for the draw"
-  },
-  {
-    "id": 17,
-    "name": "First-Generation Scholarships",
-    "description": "Scholarships specifically for students who are the first in their family to attend college.",
-    "eligibility": "First generation college student,3.5 or higher GPA,finical needs, leadership experience.",
-    "acceptance_rate": "Not shared but very competitive",
-    "deadline": "sometime in 2026 not set",
-    "award": "$1,000,$10,000",
-    "based": "need",
-    "website": "First-Generation Scholarships for High School Seniors (Class of 2026) — 20+ Verified Awards, Calendar by Deadline - ScholarshipsandGrants.us",
-    "phone": "N/A",
-    "email": "N/A",
-    "requirements": "Essay or personal statement,letter rec, proof of first generation going to college,academic transcripts."
   },
   {
     "id": 18,
@@ -246,7 +232,7 @@
     "deadline": "March 15 2026",
     "award": "national-$25,000 state-$10,000",
     "based": "need but needs merit to qualify",
-    "website": "Scholarships | Horatio Alger",
+    "website": "https://horatioalger.org/scholarships/",
     "phone": "(844) 422-4200",
     "email": "scholars@horatioalger.org",
     "requirements": "Online app,personal essay,financial documents,family income variation,highschool transcript."
@@ -260,7 +246,7 @@
     "deadline": "May 20 2026",
     "award": "full tuition paid and fees paid for nay us college student is planning to attend",
     "based": "merit",
-    "website": "Scholarship - Bryan Cameron Education Foundation",
+    "website": "https://www.bryancameroneducationfoundation.org/scholarship",
     "phone": "(949) 220-2784",
     "email": "info@bryancameroneducationfoundation.org",
     "requirements": "Application, essays, transcripts, recommendations."
@@ -274,7 +260,7 @@
     "deadline": "April 30 2026",
     "award": "$10,000",
     "based": "merit",
-    "website": "Generation Google Scholarship (North America) - Google Careers",
+    "website": "https://www.google.com/about/careers/applications/buildyourfuture/scholarships/generation-google-scholarship",
     "phone": "N/A",
     "email": "google-scholarships@google.com",
     "requirements": "Application, transcripts, essays, proof of intended CS major."
@@ -288,7 +274,7 @@
     "deadline": "march 20 2026",
     "award": "very selective nothing publicly said",
     "based": "need",
-    "website": "Young Scholars Program - Jack Kent Cooke Foundation",
+    "website": "https://www.jkcf.org/our-scholarships/young-scholars-program/",
     "phone": "(703) 723-8000",
     "email": "scholarships@jkcf.org",
     "requirements": "Application, transcripts, essays, financial documentation"

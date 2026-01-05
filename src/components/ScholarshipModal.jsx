@@ -103,19 +103,56 @@ const ScholarshipModal = ({ scholarship, onClose, user, favoriteIds, onToggleFav
           </div>
 
           <div className="pt-4 flex justify-end">
-            {scholarship.website && (
-               <a 
-                 href={scholarship.website.startsWith("http") ? scholarship.website : `http://${scholarship.website}`}
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="inline-flex items-center justify-center px-8 py-3 bg-gradient2 hover:bg-gradient1 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
-               >
-                 Send Application Now
-                 <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                 </svg>
-               </a>
-            )}
+            {scholarship.website && (() => {
+              const getWebsiteUrl = (website) => {
+                if (!website) return null;
+                
+                // If it already starts with http/https, use it as is
+                if (website.startsWith("http://") || website.startsWith("https://")) {
+                  return website;
+                }
+                
+                // If it starts with www., add https://
+                if (website.startsWith("www.")) {
+                  return `https://${website}`;
+                }
+                
+                // Check if it contains a domain extension (likely a URL)
+                const hasDomain = /\.(com|org|edu|net|gov|io|co|us|uk|ca|au|de|fr|es|it|nl|se|no|dk|fi|pl|cz|at|ch|be|ie|pt|gr|ro|hu|bg|hr|sk|si|lt|lv|ee|lu|mt|cy|is|li|mc|ad|sm|va|mk|al|rs|me|ba|xk|md|ua|by|ru|ge|am|az|kz|uz|tm|tj|kg|mn|cn|jp|kr|in|sg|my|th|ph|id|vn|tw|hk|mo|nz|za|eg|ma|tn|dz|ly|sd|et|ke|ug|tz|rw|gh|ng|sn|ci|cm|cd|ao|mz|zm|zw|bw|na|sz|ls|mg|mu|sc|km|dj|er|so|ss|bi|td|ne|ml|bf|mr|gm|gw|gn|sl|lr|tg|bj|cf|cg|cm|ga|gq|st|mx|gt|bz|sv|hn|ni|cr|pa|cu|jm|ht|do|pr|tt|bb|gd|lc|vc|ag|dm|kn|bs|ai|vg|ky|bm|tc|ms|aw|cw|sx|bq|gs|sh|ac|io|pn|nf|tk|nu|nz|au|fj|pg|sb|vu|nc|pf|wf|as|gu|mp|pw|mh|fm|ki|tv|nr|ck|ws|to)/i.test(website);
+                
+                if (hasDomain) {
+                  return `https://${website}`;
+                }
+                
+                // Otherwise, it's probably just text, return null
+                return null;
+              };
+
+              const websiteUrl = getWebsiteUrl(scholarship.website);
+              
+              if (websiteUrl) {
+                return (
+                  <a 
+                    href={websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center px-8 py-3 bg-gradient2 hover:bg-gradient1 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+                  >
+                    Visit Website
+                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                );
+              } else {
+                // Website is not a valid URL, show message
+                return (
+                  <div className="text-sm text-gray-500 italic">
+                    Website: {scholarship.website} (URL needs to be updated)
+                  </div>
+                );
+              }
+            })()}
           </div>
         </div>
       </div>

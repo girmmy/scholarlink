@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import ScholarshipModal from "../components/ScholarshipModal";
 import blueFaintBg from "../assets/blue-faint-bg.png";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const Calendar = () => {
   const today = new Date();
+  const navigate = useNavigate();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [scholarships, setScholarships] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedScholarships, setSelectedScholarships] = useState([]);
+  const [selectedScholarship, setSelectedScholarship] = useState(null);
 
   const months = [
     "January",
@@ -243,7 +247,7 @@ const Calendar = () => {
 
         <main className="flex-grow pt-20 md:pt-24 px-4 pb-12">
           <div className="container mx-auto max-w-6xl">
-            <h1 className="text-4xl md:text-5xl font-bold text-gradient1 mb-8 text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-gradient1 mt-12 mb-12 md:mb-16 text-center">
               Scholarship Calendar
             </h1>
 
@@ -326,7 +330,11 @@ const Calendar = () => {
                                 {dateScholarships.slice(0, 2).map((sch) => (
                                   <div
                                     key={sch.id}
-                                    className="text-xs bg-secondary text-white px-1.5 py-0.5 rounded truncate"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedScholarship(sch);
+                                    }}
+                                    className="text-xs bg-secondary text-white px-1.5 py-0.5 rounded truncate hover:bg-secondary/80 cursor-pointer transition-colors"
                                     title={sch.name}
                                   >
                                     {sch.name.length > 15
@@ -335,7 +343,13 @@ const Calendar = () => {
                                   </div>
                                 ))}
                                 {dateScholarships.length > 2 && (
-                                  <div className="text-xs text-secondary font-semibold">
+                                  <div
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleDateClick(dayNumber);
+                                    }}
+                                    className="text-xs text-secondary font-semibold hover:underline cursor-pointer"
+                                  >
                                     +{dateScholarships.length - 2} more
                                   </div>
                                 )}
@@ -363,9 +377,10 @@ const Calendar = () => {
                     {selectedScholarships.map((sch) => (
                       <div
                         key={sch.id}
-                        className="bg-white p-3 rounded-lg border border-gray-200"
+                        onClick={() => setSelectedScholarship(sch)}
+                        className="bg-white p-3 rounded-lg border border-gray-200 hover:border-secondary hover:shadow-md cursor-pointer transition-all"
                       >
-                        <h4 className="font-semibold text-primary mb-1">
+                        <h4 className="font-semibold text-primary mb-1 hover:text-secondary transition-colors">
                           {sch.name}
                         </h4>
                         <p className="text-sm text-gray-600 mb-2">
@@ -406,6 +421,18 @@ const Calendar = () => {
 
         <Footer />
       </div>
+
+      {/* Scholarship Modal */}
+      {selectedScholarship && (
+        <ScholarshipModal
+          scholarship={selectedScholarship}
+          onClose={() => setSelectedScholarship(null)}
+          user={null}
+          favoriteIds={new Set()}
+          onToggleFavorite={() => {}}
+          navigate={navigate}
+        />
+      )}
     </div>
   );
 };
