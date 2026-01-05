@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { auth, db } from "../config/firebase";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ScholarshipModal from "../components/ScholarshipModal";
 import blueFaintBg from "../assets/blue-faint-bg.png";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaHeart } from "react-icons/fa";
 
 const Calendar = () => {
   const today = new Date();
@@ -15,6 +27,8 @@ const Calendar = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedScholarships, setSelectedScholarships] = useState([]);
   const [selectedScholarship, setSelectedScholarship] = useState(null);
+  const [user, setUser] = useState(null);
+  const [favoriteIds, setFavoriteIds] = useState(new Set());
 
   const months = [
     "January",
@@ -157,6 +171,47 @@ const Calendar = () => {
     return null;
   };
 
+  // Load user and favorites
+  useEffect(() => {
+    if (!auth) {
+      console.warn("Firebase auth not initialized");
+      return;
+    }
+
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        loadFavorites(currentUser.uid);
+      } else {
+        setFavoriteIds(new Set());
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const loadFavorites = async (uid) => {
+    if (!db) return;
+
+    try {
+      const favoritesQuery = query(
+        collection(db, "favorites"),
+        where("userId", "==", uid)
+      );
+      const favoritesSnapshot = await getDocs(favoritesQuery);
+      const ids = new Set();
+      favoritesSnapshot.docs.forEach((doc) => {
+        const data = doc.data();
+        if (!data.deleted) {
+          ids.add(data.scholarshipId);
+        }
+      });
+      setFavoriteIds(ids);
+    } catch (error) {
+      console.error("Error loading favorites:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchScholarships = async () => {
       try {
@@ -185,9 +240,22 @@ const Calendar = () => {
 
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
+  const lastDayOfMonth = new Date(
+    currentYear,
+    currentMonth,
+    daysInMonth
+  ).getDay();
 
-  const getScholarshipsForDate = (day) => {
-    const date = new Date(currentYear, currentMonth, day);
+  // Calculate how many days we need from previous and next month to fill rows
+  const daysFromPrevMonth = firstDayOfMonth;
+  const daysFromNextMonth = 6 - lastDayOfMonth;
+  const totalDays = daysFromPrevMonth + daysInMonth + daysFromNextMonth;
+  // Use 35 cells (5 rows) if we can fit, otherwise 42 (6 rows)
+  const cellsToShow = totalDays <= 35 ? 35 : 42;
+
+  const getScholarshipsForDate = (day, monthOffset = 0) => {
+    const date = new Date(currentYear, currentMonth + monthOffset, day);
     return scholarships.filter((sch) => {
       if (!sch.deadlineDate) return false;
       return (
@@ -198,12 +266,163 @@ const Calendar = () => {
     });
   };
 
+  const getDateInfo = (i) => {
+    const dayNumber = i - firstDayOfMonth + 1;
+
+    // Previous month dates (only show if they fill the first row)
+    if (dayNumber <= 0 && i < daysFromPrevMonth) {
+      const prevMonthDay = daysInPrevMonth + dayNumber;
+      return {
+        day: prevMonthDay,
+        monthOffset: -1,
+        isCurrentMonth: false,
+        isValidDay: true,
+      };
+    }
+
+    // Current month dates
+    if (dayNumber > 0 && dayNumber <= daysInMonth) {
+      return {
+        day: dayNumber,
+        monthOffset: 0,
+        isCurrentMonth: true,
+        isValidDay: true,
+      };
+    }
+
+    // Next month dates (only show if they fill the last row)
+    const nextMonthDay = dayNumber - daysInMonth;
+    if (
+      nextMonthDay > 0 &&
+      nextMonthDay <= daysFromNextMonth &&
+      i < cellsToShow
+    ) {
+      return {
+        day: nextMonthDay,
+        monthOffset: 1,
+        isCurrentMonth: false,
+        isValidDay: true,
+      };
+    }
+
+    // Empty cell (shouldn't happen with proper calculation, but handle it)
+    return {
+      day: null,
+      monthOffset: 0,
+      isCurrentMonth: false,
+      isValidDay: false,
+    };
+  };
+
+  const handleAdjacentMonthClick = (day, monthOffset) => {
+    // Calculate the target month and year
+    let targetMonth = currentMonth + monthOffset;
+    let targetYear = currentYear;
+
+    if (targetMonth < 0) {
+      targetMonth = 11;
+      targetYear = currentYear - 1;
+    } else if (targetMonth > 11) {
+      targetMonth = 0;
+      targetYear = currentYear + 1;
+    }
+
+    // Navigate to the adjacent month
+    setCurrentMonth(targetMonth);
+    setCurrentYear(targetYear);
+
+    // Set the selected date and load scholarships for that date
+    const newDate = new Date(targetYear, targetMonth, day);
+    setSelectedDate(newDate);
+
+    // Get scholarships for the target date
+    const targetDate = new Date(targetYear, targetMonth, day);
+    const dateScholarships = scholarships.filter((sch) => {
+      if (!sch.deadlineDate) return false;
+      return (
+        sch.deadlineDate.getDate() === targetDate.getDate() &&
+        sch.deadlineDate.getMonth() === targetDate.getMonth() &&
+        sch.deadlineDate.getFullYear() === targetDate.getFullYear()
+      );
+    });
+    setSelectedScholarships(dateScholarships);
+  };
+
+  const isFavorited = (scholarshipId) => {
+    return favoriteIds.has(scholarshipId.toString());
+  };
+
+  const toggleFavorite = async (scholarship) => {
+    if (!user) {
+      navigate("/sign-up");
+      return;
+    }
+
+    if (!db) {
+      console.warn("Firestore not available");
+      return;
+    }
+
+    const scholarshipId = scholarship.id.toString();
+    const isCurrentlyFavorited = favoriteIds.has(scholarshipId);
+
+    // Update UI immediately (optimistic update)
+    if (isCurrentlyFavorited) {
+      setFavoriteIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(scholarshipId);
+        return newSet;
+      });
+    } else {
+      setFavoriteIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.add(scholarshipId);
+        return newSet;
+      });
+    }
+
+    // Then sync with Firestore in the background
+    try {
+      const favoriteRef = doc(db, "favorites", `${user.uid}_${scholarship.id}`);
+      const favoriteDoc = await getDoc(favoriteRef);
+
+      if (isCurrentlyFavorited) {
+        // Remove from favorites
+        if (favoriteDoc.exists()) {
+          await updateDoc(favoriteRef, { deleted: true });
+        }
+      } else {
+        // Add to favorites
+        await setDoc(favoriteRef, {
+          userId: user.uid,
+          scholarshipId: scholarshipId,
+          addedAt: new Date().toISOString(),
+          deleted: false,
+        });
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      // Revert optimistic update on error
+      if (isCurrentlyFavorited) {
+        setFavoriteIds((prev) => {
+          const newSet = new Set(prev);
+          newSet.add(scholarshipId);
+          return newSet;
+        });
+      } else {
+        setFavoriteIds((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(scholarshipId);
+          return newSet;
+        });
+      }
+    }
+  };
+
   const handleDateClick = (day) => {
     const dateScholarships = getScholarshipsForDate(day);
-    if (dateScholarships.length > 0) {
-      setSelectedDate(new Date(currentYear, currentMonth, day));
-      setSelectedScholarships(dateScholarships);
-    }
+    setSelectedDate(new Date(currentYear, currentMonth, day));
+    setSelectedScholarships(dateScholarships);
   };
 
   const changeMonth = (direction) => {
@@ -286,112 +505,206 @@ const Calendar = () => {
 
               {/* Calendar grid */}
               <div className="grid grid-cols-7 gap-2">
-                {Array(42)
+                {Array(cellsToShow)
                   .fill(null)
                   .map((_, i) => {
-                    const dayNumber = i - firstDayOfMonth + 1;
-                    const isValidDay =
-                      dayNumber > 0 && dayNumber <= daysInMonth;
-                    const dateScholarships = isValidDay
-                      ? getScholarshipsForDate(dayNumber)
-                      : [];
+                    const dateInfo = getDateInfo(i);
+                    if (!dateInfo.isValidDay) {
+                      return (
+                        <div
+                          key={i}
+                          className="min-h-[80px] md:min-h-[100px]"
+                        ></div>
+                      );
+                    }
+
+                    const dateScholarships = getScholarshipsForDate(
+                      dateInfo.day,
+                      dateInfo.monthOffset
+                    );
                     const hasDeadline = dateScholarships.length > 0;
-                    const todayClass = isValidDay && isToday(dayNumber);
+                    const todayClass =
+                      dateInfo.isCurrentMonth && isToday(dateInfo.day);
 
                     return (
                       <div
                         key={i}
                         className={`min-h-[80px] md:min-h-[100px] p-2 rounded-lg border-2 transition-all ${
-                          isValidDay
+                          dateInfo.isCurrentMonth
                             ? hasDeadline
                               ? "border-secondary bg-blue-50 hover:bg-blue-100 cursor-pointer"
                               : todayClass
                               ? "border-primary bg-primary/10 hover:bg-primary/20 cursor-pointer"
                               : "border-gray-200 hover:bg-gray-50 cursor-pointer"
-                            : "border-transparent"
+                            : hasDeadline
+                            ? "border-secondary bg-blue-50/50 hover:bg-blue-100/50 cursor-pointer opacity-75"
+                            : "border-gray-200 bg-gray-50/50 opacity-50"
                         } ${todayClass ? "ring-2 ring-primary" : ""}`}
-                        onClick={() => isValidDay && handleDateClick(dayNumber)}
+                        onClick={() => {
+                          if (dateInfo.isCurrentMonth) {
+                            handleDateClick(dateInfo.day);
+                          } else if (hasDeadline) {
+                            handleAdjacentMonthClick(
+                              dateInfo.day,
+                              dateInfo.monthOffset
+                            );
+                          }
+                        }}
                       >
-                        {isValidDay && (
-                          <>
-                            <div
-                              className={`text-sm font-semibold mb-1 ${
-                                todayClass
-                                  ? "text-primary"
-                                  : hasDeadline
-                                  ? "text-secondary"
-                                  : "text-gray-700"
-                              }`}
-                            >
-                              {dayNumber}
-                            </div>
-                            {hasDeadline && (
-                              <div className="space-y-1">
-                                {dateScholarships.slice(0, 2).map((sch) => (
-                                  <div
-                                    key={sch.id}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setSelectedScholarship(sch);
-                                    }}
-                                    className="text-xs bg-secondary text-white px-1.5 py-0.5 rounded truncate hover:bg-secondary/80 cursor-pointer transition-colors"
-                                    title={sch.name}
-                                  >
-                                    {sch.name.length > 15
-                                      ? sch.name.substring(0, 15) + "..."
-                                      : sch.name}
-                                  </div>
-                                ))}
-                                {dateScholarships.length > 2 && (
-                                  <div
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleDateClick(dayNumber);
-                                    }}
-                                    className="text-xs text-secondary font-semibold hover:underline cursor-pointer"
-                                  >
-                                    +{dateScholarships.length - 2} more
-                                  </div>
+                        <div
+                          className={`text-sm font-semibold mb-1 ${
+                            dateInfo.isCurrentMonth
+                              ? todayClass
+                                ? "text-primary"
+                                : hasDeadline
+                                ? "text-secondary"
+                                : "text-gray-700"
+                              : hasDeadline
+                              ? "text-secondary"
+                              : "text-gray-400"
+                          }`}
+                        >
+                          {dateInfo.day}
+                        </div>
+                        {hasDeadline && (
+                          <div className="space-y-1">
+                            {dateScholarships.slice(0, 2).map((sch) => (
+                              <div
+                                key={sch.id}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (dateInfo.isCurrentMonth) {
+                                    setSelectedScholarship(sch);
+                                  } else {
+                                    handleAdjacentMonthClick(
+                                      dateInfo.day,
+                                      dateInfo.monthOffset
+                                    );
+                                  }
+                                }}
+                                className={`text-xs px-1.5 py-0.5 rounded truncate hover:opacity-80 cursor-pointer transition-colors flex items-center gap-1 ${
+                                  isFavorited(sch.id)
+                                    ? "bg-red-500 text-white hover:bg-red-600"
+                                    : "bg-secondary text-white hover:bg-secondary/80"
+                                }`}
+                                title={sch.name}
+                              >
+                                {isFavorited(sch.id) && (
+                                  <FaHeart className="text-[8px] flex-shrink-0" />
                                 )}
+                                <span className="truncate">
+                                  {sch.name.length > 15
+                                    ? sch.name.substring(0, 15) + "..."
+                                    : sch.name}
+                                </span>
+                              </div>
+                            ))}
+                            {dateScholarships.length > 2 && (
+                              <div
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (dateInfo.isCurrentMonth) {
+                                    handleDateClick(dateInfo.day);
+                                  } else {
+                                    handleAdjacentMonthClick(
+                                      dateInfo.day,
+                                      dateInfo.monthOffset
+                                    );
+                                  }
+                                }}
+                                className="text-xs text-secondary font-semibold hover:underline cursor-pointer"
+                              >
+                                +{dateScholarships.length - 2} more
                               </div>
                             )}
-                          </>
+                          </div>
                         )}
                       </div>
                     );
                   })}
               </div>
 
-              {/* Selected date scholarships */}
-              {selectedDate && selectedScholarships.length > 0 && (
-                <div className="mt-6 p-4 bg-gray-50 rounded-lg border-2 border-secondary">
-                  <h3 className="text-lg font-bold text-secondary mb-3">
-                    Scholarships due on{" "}
-                    {selectedDate.toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </h3>
-                  <div className="space-y-3">
-                    {selectedScholarships.map((sch) => (
-                      <div
-                        key={sch.id}
-                        onClick={() => setSelectedScholarship(sch)}
-                        className="bg-white p-3 rounded-lg border border-gray-200 hover:border-secondary hover:shadow-md cursor-pointer transition-all"
-                      >
-                        <h4 className="font-semibold text-primary mb-1 hover:text-secondary transition-colors">
-                          {sch.name}
-                        </h4>
-                        <p className="text-sm text-gray-600 mb-2">
-                          Award: {sch.award || "Varies"}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          Deadline: {sch.deadline}
-                        </p>
-                      </div>
-                    ))}
+              {/* Legend */}
+              <div className="mt-2 flex flex-wrap gap-4 items-center justify-center text-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded border-2 border-secondary bg-blue-50"></div>
+                  <span>Has deadlines</span>
+                </div>
+                {user && (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded border-2 border-red-500 bg-red-500 flex items-center justify-center">
+                      <FaHeart className="text-white text-[8px]" />
+                    </div>
+                    <span>Favorited</span>
                   </div>
+                )}
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded border-2 border-primary bg-primary/10 ring-2 ring-primary"></div>
+                  <span>Today</span>
+                </div>
+              </div>
+
+              {/* Selected date scholarships */}
+              {selectedDate && (
+                <div className="mt-2 p-4 bg-gray-50 rounded-lg border-2 border-secondary">
+                  <h3 className="text-lg font-bold text-secondary mb-3">
+                    {selectedScholarships.length > 0
+                      ? `Scholarships due on ${selectedDate.toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          }
+                        )}`
+                      : `${selectedDate.toLocaleDateString("en-US", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })}`}
+                  </h3>
+                  {selectedScholarships.length > 0 ? (
+                    <div className="space-y-3">
+                      {selectedScholarships.map((sch) => (
+                        <div
+                          key={sch.id}
+                          onClick={() => setSelectedScholarship(sch)}
+                          className={`bg-white p-3 rounded-lg border hover:shadow-md cursor-pointer transition-all ${
+                            isFavorited(sch.id)
+                              ? "border-red-500 hover:border-red-600"
+                              : "border-gray-200 hover:border-secondary"
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <h4 className="font-semibold text-primary mb-1 hover:text-secondary transition-colors flex-1">
+                              {sch.name}
+                            </h4>
+                            {isFavorited(sch.id) && (
+                              <FaHeart
+                                className="text-red-500 hover:text-red-600 flex-shrink-0 mt-0.5 transition-colors"
+                                size={16}
+                              />
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-600 mb-2">
+                            Award: {sch.award || "Varies"}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            Deadline: {sch.deadline}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <p className="text-gray-600 text-lg mb-2">
+                        No scholarships due on this date
+                      </p>
+                      <p className="text-gray-500 text-sm">
+                        Check other dates or browse all scholarships
+                      </p>
+                    </div>
+                  )}
                   <button
                     onClick={() => {
                       setSelectedDate(null);
@@ -403,18 +716,6 @@ const Calendar = () => {
                   </button>
                 </div>
               )}
-
-              {/* Legend */}
-              <div className="mt-6 flex flex-wrap gap-4 items-center justify-center text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded border-2 border-secondary bg-blue-50"></div>
-                  <span>Has deadlines</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded border-2 border-primary bg-primary/10 ring-2 ring-primary"></div>
-                  <span>Today</span>
-                </div>
-              </div>
             </div>
           </div>
         </main>
@@ -427,9 +728,9 @@ const Calendar = () => {
         <ScholarshipModal
           scholarship={selectedScholarship}
           onClose={() => setSelectedScholarship(null)}
-          user={null}
-          favoriteIds={new Set()}
-          onToggleFavorite={() => {}}
+          user={user}
+          favoriteIds={favoriteIds}
+          onToggleFavorite={toggleFavorite}
           navigate={navigate}
         />
       )}

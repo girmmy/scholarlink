@@ -3,8 +3,8 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import blueFaintBg from "../assets/blue-faint-bg.png";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { signInWithEmailAndPassword, signInWithPopup, updateProfile } from "firebase/auth";
+import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db, googleProvider } from "../config/firebase";
 
 const Login = () => {
@@ -123,6 +123,18 @@ const Login = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
+      // Ensure photoURL is set in auth profile (Google provides this automatically)
+      // This ensures the photoURL persists across sessions
+      if (user.photoURL && auth.currentUser && auth.currentUser.photoURL !== user.photoURL) {
+        try {
+          await updateProfile(auth.currentUser, {
+            photoURL: user.photoURL,
+          });
+        } catch (profileError) {
+          console.warn("Failed to update profile photoURL:", profileError);
+        }
+      }
+
       // Try to check/create user document in Firestore (non-blocking)
       if (db) {
         try {
@@ -134,6 +146,7 @@ const Login = () => {
             await setDoc(userDocRef, {
               name: user.displayName || "User",
               email: user.email,
+              photoURL: user.photoURL || null, // Save photoURL to Firestore
               createdAt: new Date().toISOString(),
               age: "18",
               grade: "12",
@@ -142,6 +155,14 @@ const Login = () => {
               dreamSchool: "Harvard",
               bio: "No bio yet",
             });
+          } else {
+            // Update photoURL if it exists and is different
+            const existingData = userDoc.data();
+            if (user.photoURL && existingData.photoURL !== user.photoURL) {
+              await updateDoc(userDocRef, {
+                photoURL: user.photoURL,
+              });
+            }
           }
         } catch (firestoreError) {
           // If Firestore fails (offline, etc.), log but don't block sign-in

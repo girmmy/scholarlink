@@ -8,6 +8,7 @@ import logo from "../assets/scholarlink-transparent.svg";
 function Navbar() {
   const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const navigate = useNavigate();
 
   const toggleMenu = () => {
@@ -22,6 +23,7 @@ function Navbar() {
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      setImageError(false); // Reset image error when user changes
     });
 
     return () => unsubscribe();
@@ -85,11 +87,13 @@ function Navbar() {
           <div className="relative group">
             <Link to="/profile" className="flex items-center">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold text-sm hover:ring-2 hover:ring-secondary transition-all cursor-pointer">
-                {user.photoURL ? (
+                {user.photoURL && !imageError ? (
                   <img
                     src={user.photoURL}
                     alt={user.displayName || "User"}
                     className="w-full h-full rounded-full object-cover"
+                    onError={() => setImageError(true)}
+                    onLoad={() => setImageError(false)}
                   />
                 ) : (
                   getInitials(user.displayName || user.email || "User")
@@ -97,23 +101,23 @@ function Navbar() {
               </div>
             </Link>
             {/* Dropdown menu */}
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            <div className="absolute right-0 mt-2 w-64 min-w-[200px] bg-white rounded-lg shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div className="py-2">
-                <div className="px-4 py-2 border-b border-gray-200">
-                  <p className="text-sm font-semibold text-gray-900 truncate">
+                <div className="px-4 py-3 border-b border-gray-200">
+                  <p className="text-sm font-semibold text-gray-900 break-words">
                     {user.displayName || "User"}
                   </p>
-                  <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                  <p className="text-xs text-gray-500 break-words mt-1">{user.email}</p>
                 </div>
                 <Link
                   to="/profile"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   View Profile
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   Sign Out
                 </button>

@@ -25,6 +25,7 @@ const Profile = () => {
   const [allScholarships, setAllScholarships] = useState([]);
   const [selectedScholarship, setSelectedScholarship] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,6 +38,7 @@ const Profile = () => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
+        setImageError(false); // Reset image error when user changes
         await loadUserData(currentUser.uid, currentUser);
       } else {
         navigate("/login");
@@ -263,11 +265,13 @@ const Profile = () => {
           <div className="flex flex-col md:flex-row gap-6 md:gap-8">
             {/* Profile Picture */}
             <div className="flex-shrink-0">
-              {user?.photoURL ? (
+              {user?.photoURL && !imageError ? (
                 <img
                   src={user.photoURL}
                   alt={user.displayName || "User"}
                   className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-white shadow-lg"
+                  onError={() => setImageError(true)}
+                  onLoad={() => setImageError(false)}
                 />
               ) : (
                 <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center text-white text-4xl sm:text-5xl font-bold">
@@ -440,7 +444,7 @@ const Profile = () => {
                       {scholarship.name}
                     </h3>
                     <span className="ml-2 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">
-                      Applied!
+                      Favorited!
                     </span>
                   </div>
 
