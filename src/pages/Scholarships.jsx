@@ -214,71 +214,75 @@ const Scholarships = () => {
 
   return (
     <div
-      className="min-h-screen font-sans bg-cover bg-center bg-no-repeat relative"
+      className="min-h-screen font-sans bg-cover bg-center bg-no-repeat relative w-full"
       style={{ backgroundImage: `url(${blueFaintBg})` }}
     >
       <div className="absolute inset-0 bg-black/10"></div>
-      <div className="relative z-10 flex flex-col min-h-screen">
+      <div className="relative z-10 flex flex-col min-h-screen w-full">
         <Navbar />
 
-        <main className="flex-grow pt-20 md:pt-24 pb-20 px-4 sm:px-6 my-12 lg:px-8 max-w-7xl mx-auto">
+        <main className="flex-grow pt-20 md:pt-24 pb-20 px-3 sm:px-4 md:px-6 max-w-7xl mx-auto w-full">
           {/* HEADER SECTION */}
-          <div className="mb-12">
-            <h1 className="text-4xl md:text-5xl text-gradient1 font-bold text-gray-900 mb-4 text-center">
+          <div className="mb-8 md:mb-12">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl text-gradient1 font-bold text-gray-900 mb-3 md:mb-4 text-center">
               Explore Scholarships
             </h1>
-            <p className="text-gray-600 text-center text-lg max-w-2xl mx-auto">
+            <p className="text-gray-600 text-center text-base sm:text-lg max-w-2xl mx-auto px-2">
               Find the perfect financial support for your education. Search
               through our curated list of opportunities.
             </p>
           </div>
 
-          {/* SEARCH & FILTER BAR */}
-          <div className="flex flex-col md:flex-row gap-4 mb-10 items-center">
-            <div className="relative flex-1 w-full">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <svg
-                  className="h-5 w-5 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          {/* SEARCH & FILTER BAR - NEW DESIGN */}
+          <div className="mb-8 md:mb-10">
+            <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-4 md:p-6 border border-white/20">
+              <div className="flex flex-col gap-4">
+                <div className="relative w-full">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <svg
+                      className="h-5 w-5 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search by name, eligibility..."
+                    className="block w-full pl-11 pr-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary transition-all shadow-sm"
+                    value={searchQuery}
+                    onChange={handleFilteredSearch}
                   />
-                </svg>
-              </div>
-              <input
-                type="text"
-                placeholder="Search by name, eligibility..."
-                className="block w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
-                value={searchQuery}
-                onChange={handleFilteredSearch}
-              />
-            </div>
+                </div>
 
-            <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
-              {[
-                { id: "all", label: "All" },
-                { id: "need", label: "Need-based" },
-                { id: "merit", label: "Merit-based" },
-                { id: "both", label: "Both" },
-              ].map((filter) => (
-                <button
-                  key={filter.id}
-                  onClick={() => setBasedFilter(filter.id)}
-                  className={`px-6 py-3.5 rounded-xl font-medium text-sm whitespace-nowrap transition-all duration-200 border ${
-                    basedFilter === filter.id
-                      ? "bg-gray-900 text-white border-gray-900 shadow-md"
-                      : "bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-                  }`}
-                >
-                  {filter.label}
-                </button>
-              ))}
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { id: "all", label: "All" },
+                    { id: "need", label: "Need-based" },
+                    { id: "merit", label: "Merit-based" },
+                    { id: "both", label: "Both" },
+                  ].map((filter) => (
+                    <button
+                      key={filter.id}
+                      onClick={() => setBasedFilter(filter.id)}
+                      className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
+                        basedFilter === filter.id
+                          ? "bg-gradient2 text-white shadow-md transform scale-105"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200"
+                      }`}
+                    >
+                      {filter.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -326,72 +330,75 @@ const Scholarships = () => {
               </div>
             )}
 
-            {/* CARDS GRID */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* CARDS GRID - NEW DESIGN */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 w-full">
               {filteredScholarships.map((sch) => {
                 const isFavorited = favoriteIds.has(sch.id.toString());
                 return (
                   <div
                     key={sch.id}
-                    className={`group bg-white rounded-2xl p-6 border-2 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 flex flex-col h-full ${
+                    className={`group bg-white rounded-lg border transition-all duration-300 hover:shadow-xl flex flex-col h-full overflow-hidden cursor-pointer ${
                       isFavorited
-                        ? "border-secondary shadow-[0_4px_12px_rgba(0,126,167,0.2)]"
-                        : "border-gray-100"
+                        ? "border-secondary shadow-lg ring-2 ring-secondary/20"
+                        : "border-gray-200 shadow-sm hover:border-secondary/50"
                     }`}
+                    onClick={() => setSelectedScholarship(sch)}
                   >
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex gap-2">
+                    {/* Card Header */}
+                    <div className="p-3 sm:p-4 pb-2">
+                      <div className="flex justify-between items-start mb-2">
                         {sch.based && (
                           <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold uppercase tracking-wide ${
+                            className={`inline-flex items-center px-2 py-1 rounded text-[10px] font-bold uppercase ${
                               sch.based
                                 .toLowerCase()
                                 .includes("need & merit") ||
                               sch.based.toLowerCase().includes("both")
-                                ? "bg-indigo-50 text-indigo-700"
+                                ? "bg-indigo-100 text-indigo-800"
                                 : sch.based.toLowerCase().includes("merit")
-                                ? "bg-purple-50 text-purple-700"
+                                ? "bg-purple-100 text-purple-800"
                                 : sch.based.toLowerCase().includes("need")
-                                ? "bg-amber-50 text-amber-700"
-                                : "bg-blue-50 text-blue-700"
+                                ? "bg-amber-100 text-amber-800"
+                                : "bg-blue-100 text-blue-800"
                             }`}
                           >
                             {sch.based}
                           </span>
                         )}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleFavorite(sch);
+                          }}
+                          className="text-red-400 hover:text-red-600 transition-colors p-1 z-10"
+                          title={
+                            user
+                              ? isFavorited
+                                ? "Remove from favorites"
+                                : "Add to favorites"
+                              : "Sign in to favorite"
+                          }
+                        >
+                          {isFavorited ? (
+                            <FaHeart size={18} />
+                          ) : (
+                            <FaRegHeart size={18} />
+                          )}
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          toggleFavorite(sch);
-                        }}
-                        className="text-red-500 hover:text-red-600 transition-colors p-1 z-10"
-                        title={
-                          user
-                            ? isFavorited
-                              ? "Remove from favorites"
-                              : "Add to favorites"
-                            : "Sign in to favorite"
-                        }
-                      >
-                        {isFavorited ? (
-                          <FaHeart size={20} />
-                        ) : (
-                          <FaRegHeart size={20} />
-                        )}
-                      </button>
+
+                      <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-secondary transition-colors leading-tight">
+                        {sch.name}
+                      </h3>
                     </div>
 
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-                      {sch.name}
-                    </h3>
-
-                    <div className="space-y-3 mb-6 flex-grow">
-                      <div className="flex items-center text-sm text-gray-600">
+                    {/* Card Body */}
+                    <div className="px-3 sm:px-4 pb-3 sm:pb-4 flex-grow space-y-2">
+                      <div className="flex items-center text-xs text-gray-600">
                         <svg
-                          className="w-5 h-5 mr-3 text-gray-400"
+                          className="w-3.5 h-3.5 mr-2 text-gray-400 flex-shrink-0"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -404,12 +411,12 @@ const Scholarships = () => {
                           />
                         </svg>
                         <span className="truncate">
-                          Deadline: {sch.deadline || "Open"}
+                          {sch.deadline || "Open"}
                         </span>
                       </div>
-                      <div className="flex items-center text-sm text-gray-600">
+                      <div className="flex items-center text-xs text-gray-600">
                         <svg
-                          className="w-5 h-5 mr-3 text-gray-400"
+                          className="w-3.5 h-3.5 mr-2 text-gray-400 flex-shrink-0"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -421,32 +428,26 @@ const Scholarships = () => {
                             d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                           />
                         </svg>
-                        <span className="truncate">
-                          Award: {sch.award || "Varies"}
+                        <span className="truncate font-medium text-gray-900">
+                          {sch.award || "Varies"}
                         </span>
                       </div>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => setSelectedScholarship(sch)}
-                      className="w-full py-3 bg-gray-50 hover:bg-gray-100 text-gray-900 font-semibold rounded-xl transition-colors duration-200 border border-gray-100 flex items-center justify-center group/btn"
-                    >
-                      See Details
-                      <svg
-                        className="w-4 h-4 ml-2 text-gray-400 group-hover/btn:text-gray-900 transition-colors"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                    {/* Card Footer */}
+                    <div className="px-3 sm:px-4 pb-3 sm:pb-4">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setSelectedScholarship(sch);
+                        }}
+                        className="w-full py-2 bg-gradient2 hover:bg-gradient1 text-white text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-[1.02]"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </button>
+                        View Details
+                      </button>
+                    </div>
                   </div>
                 );
               })}

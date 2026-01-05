@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import blueFaintBg from "../assets/blue-faint-bg.png";
 
 const Contact = () => {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) =>
@@ -25,7 +25,7 @@ const Contact = () => {
 
       if (response.ok) {
         alert("Message sent successfully!");
-        setForm({ name: "", email: "", message: "" });
+        setForm({ name: "", email: "", subject: "", message: "" });
       } else {
         alert("Failed to send message. Please try again later.");
       }
@@ -39,11 +39,11 @@ const Contact = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col bg-cover bg-center bg-no-repeat relative"
+      className="min-h-screen flex flex-col bg-cover bg-center bg-no-repeat relative overflow-x-hidden w-full"
       style={{ backgroundImage: `url(${blueFaintBg})` }}
     >
       <div className="absolute inset-0 bg-black/10"></div>
-      <div className="relative z-10 flex flex-col min-h-screen">
+      <div className="relative z-10 flex flex-col min-h-screen w-full">
         <Navbar />
         <main className="flex-grow pt-20 md:pt-24">
           <div className="container mx-auto px-4 py-16 max-w-3xl">
@@ -73,6 +73,20 @@ const Contact = () => {
                     type="email"
                     name="email"
                     value={form.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-secondary"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-primary mb-1">
+                    Subject
+                  </label>
+                  <input
+                    type="text"
+                    name="subject"
+                    value={form.subject}
                     onChange={handleChange}
                     required
                     className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-secondary"

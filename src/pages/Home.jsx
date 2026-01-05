@@ -259,16 +259,16 @@ function Home() {
   }, []);
 
   return (
-    <div className="bg-gray-50 overflow-hidden">
+    <div className="bg-gray-50 overflow-x-hidden w-full">
       <Navbar />
-      <main className="pt-16 md:pt-20">
+      <main className="pt-16 md:pt-20 w-full">
         {/* HERO SECTION */}
         <div
-          className="min-h-[60vh] flex flex-col px-4 pb-12 bg-cover bg-center bg-no-repeat relative"
+          className="min-h-[60vh] flex flex-col px-4 pb-12 bg-cover bg-center bg-no-repeat relative w-full"
           style={{ backgroundImage: `url(${blueFaintBg})` }}
         >
           <div className="absolute inset-0 bg-black/10"></div>
-          <div className="relative z-10 flex flex-col">
+          <div className="relative z-10 flex flex-col w-full">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-gradient1 text-center mx-auto pt-8 sm:pt-12 md:pt-16 pb-6 sm:pb-8 font-bold">
               Connecting Scholars, <br />
               Expanding Opportunities
@@ -495,17 +495,17 @@ function Home() {
             </div>
 
             <div className="flex flex-col justify-center flex-1">
-              <h3 className="text-3xl font-bold pb-1 ">Tomi Odugbemi</h3>
+              <h3 className="text-3xl font-bold pb-1 ">Jamie Simpson</h3>
               <h3 className="text-xl  pb-3 ">
                 Georgia Institute of Technology
               </h3>
               <p className="text-md text-wrap">
-                Tomi discovered the perfect scholarship match through
-                Scholarlink that helped fund her computer science degree at
-                Georgia Tech. The platform's personalized recommendations and
-                deadline tracking features made it easy for her to stay
-                organized and apply to multiple opportunities, ultimately
-                securing over $50,000 in scholarship funding.
+                Jamie discovered the perfect scholarship match through
+                Scholarlink that helped fund her architectural engineering
+                degree at Georgia Tech. The platform's personalized
+                recommendations and deadline tracking features made it easy for
+                her to stay organized and apply to multiple opportunities,
+                ultimately securing over $50,000 in scholarship funding.
               </p>
             </div>
           </div>
@@ -521,12 +521,12 @@ function Home() {
             </div>
 
             <div className="flex flex-col justify-center flex-1">
-              <h3 className="text-3xl font-bold pb-1 ">Priyavrata Deb</h3>
+              <h3 className="text-3xl font-bold pb-1 ">Joshua Samson</h3>
               <h3 className="text-xl  pb-3 ">
                 Massachusetts Institute of Technology
               </h3>
               <p className="text-md text-wrap">
-                Priyavrata used Scholarlink to find need-based scholarships that
+                Joshua used Scholarlink to find need-based scholarships that
                 aligned with his background in computer engineering. The
                 platform's filtering system helped him identify opportunities
                 specifically for first-generation college students, leading to a

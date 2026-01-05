@@ -6,11 +6,11 @@ import blueFaintBg from "../assets/blue-faint-bg.png";
 const References = () => {
   return (
     <div
-      className="min-h-screen flex flex-col bg-cover bg-center bg-no-repeat relative"
+      className="min-h-screen flex flex-col bg-cover bg-center bg-no-repeat relative overflow-x-hidden w-full"
       style={{ backgroundImage: `url(${blueFaintBg})` }}
     >
       <div className="absolute inset-0 bg-black/10"></div>
-      <div className="relative z-10 flex flex-col min-h-screen">
+      <div className="relative z-10 flex flex-col min-h-screen w-full">
         <Navbar />
         <main className="flex-grow pt-20 md:pt-24 px-4 pb-12">
           <div className="container mx-auto max-w-6xl">
