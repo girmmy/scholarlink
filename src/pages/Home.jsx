@@ -29,6 +29,46 @@ function Home() {
   const [selectedScholarship, setSelectedScholarship] = useState(null);
   const navigate = useNavigate();
 
+  // Scroll animation observer
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: "0px 0px -50px 0px",
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    }, observerOptions);
+
+    // Small delay to ensure DOM is ready
+    const timeoutId = setTimeout(() => {
+      // Observe all elements with animation classes
+      const animatedElements = document.querySelectorAll(
+        ".fade-in-up-on-scroll, .fade-in-left-on-scroll, .fade-in-right-on-scroll, .scale-in-on-scroll"
+      );
+      animatedElements.forEach((el) => observer.observe(el));
+    }, 100);
+
+    return () => {
+      clearTimeout(timeoutId);
+      // Clean up observer
+      const animatedElements = document.querySelectorAll(
+        ".fade-in-up-on-scroll, .fade-in-left-on-scroll, .fade-in-right-on-scroll, .scale-in-on-scroll"
+      );
+      animatedElements.forEach((el) => {
+        try {
+          observer.unobserve(el);
+        } catch (e) {
+          // Element may have been removed, ignore
+        }
+      });
+    };
+  }, [upcomingScholarships]);
+
   useEffect(() => {
     if (!auth) {
       console.warn("Firebase auth not initialized");
@@ -269,17 +309,17 @@ function Home() {
         >
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="relative z-10 flex flex-col w-full">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-gradient1 text-center mx-auto pt-8 sm:pt-12 md:pt-16 pb-6 sm:pb-8 font-bold">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-gradient1 text-center mx-auto pt-8 sm:pt-12 md:pt-16 pb-6 sm:pb-8 font-bold hero-title">
               Connecting Scholars, <br />
               Expanding Opportunities
             </h1>
-            <p className="text-gray-600 text-base sm:text-lg md:text-xl my-4 sm:my-5 text-center mx-auto max-w-2xl px-4">
+            <p className="text-gray-600 text-base sm:text-lg md:text-xl my-4 sm:my-5 text-center mx-auto max-w-2xl px-4 hero-description">
               Discover and apply for scholarships that match your goals. Connect
               with opportunities that can help fund your education.
             </p>
 
             {/* SEARCH BAR */}
-            <div className="mt-6 sm:mt-8 mb-4">
+            <div className="mt-6 sm:mt-8 mb-4 hero-search">
               <SearchBar />
             </div>
           </div>
@@ -287,10 +327,10 @@ function Home() {
 
         {/* OUR GOAL */}
         <div className="mt-12 md:mt-24 mb-12 md:mb-16 flex flex-col items-center justify-center mx-auto max-w-3xl px-4">
-          <h2 className="text-gradient2 text-center mt-4 text-3xl sm:text-4xl md:text-5xl font-bold">
+          <h2 className="text-gradient2 text-center mt-4 text-3xl sm:text-4xl md:text-5xl font-bold fade-in-up-on-scroll">
             OUR GOAL
           </h2>
-          <p className="text-black text-center mt-8 text-xl">
+          <p className="text-black text-center mt-8 text-xl fade-in-up-on-scroll stagger-1">
             Our mission is to connect students with scholarship opportunities
             that can help them achieve their educational dreams. We provide a
             comprehensive platform where students can discover, track, and apply
@@ -300,19 +340,20 @@ function Home() {
 
         {/* UPCOMING SCHOLARSHIPS */}
         <div className="mt-24 mb-10 flex flex-col items-center justify-center mx-auto max-w-4xl px-4">
-          <h2 className="text-gradient2 text-center text-5xl font-bold">
+          <h2 className="text-gradient2 text-center text-5xl font-bold fade-in-up-on-scroll">
             UPCOMING SCHOLARSHIPS
           </h2>
 
           {/* CARDS FOR SCHOLARSHIPS */}
           <div className="mt-8 mb-10 w-full grid grid-cols-1 md:grid-cols-2 gap-6">
             {upcomingScholarships.length > 0 ? (
-              upcomingScholarships.map((scholarship) => {
+              upcomingScholarships.map((scholarship, index) => {
                 const isFavorited = favoriteIds.has(scholarship.id.toString());
+                const staggerClass = `stagger-${Math.min(index + 1, 4)}`;
                 return (
                   <div
                     key={scholarship.id}
-                    className={`group bg-white rounded-2xl p-6 border-2 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 flex flex-col h-full ${
+                    className={`group bg-white rounded-2xl p-6 border-2 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] flex flex-col h-full scale-in-on-scroll ${staggerClass} ${
                       isFavorited
                         ? "border-secondary shadow-[0_4px_12px_rgba(0,126,167,0.2)]"
                         : "border-gray-100"
@@ -350,7 +391,7 @@ function Home() {
                           e.stopPropagation();
                           toggleFavorite(scholarship);
                         }}
-                        className="text-red-500 hover:text-red-600 transition-colors p-1 z-10 relative"
+                        className="text-red-500 hover:text-red-600 transition-all duration-300 p-1 z-10 relative hover:scale-125 active:scale-100"
                         title={
                           user
                             ? favoriteIds.has(scholarship.id.toString())
@@ -360,7 +401,7 @@ function Home() {
                         }
                       >
                         {favoriteIds.has(scholarship.id.toString()) ? (
-                          <FaHeart size={20} />
+                          <FaHeart size={20} className="animate-pulse" />
                         ) : (
                           <FaRegHeart size={20} />
                         )}
@@ -412,11 +453,11 @@ function Home() {
 
                     <button
                       onClick={() => setSelectedScholarship(scholarship)}
-                      className="w-full py-3 bg-gray-50 hover:bg-gray-100 text-gray-900 font-semibold rounded-xl transition-colors duration-200 border border-gray-100 flex items-center justify-center group/btn"
+                      className="w-full py-3 bg-gray-50 hover:bg-gray-100 text-gray-900 font-semibold rounded-xl transition-all duration-200 border border-gray-100 flex items-center justify-center group/btn hover:scale-105 active:scale-95"
                     >
                       See Details
                       <svg
-                        className="w-4 h-4 ml-2 text-gray-400 group-hover/btn:text-gray-900 transition-colors"
+                        className="w-4 h-4 ml-2 text-gray-400 group-hover/btn:text-gray-900 transition-all group-hover/btn:translate-x-1"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -440,13 +481,13 @@ function Home() {
           </div>
 
           {/* Link to Calendar */}
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-center fade-in-up-on-scroll">
             <Link
               to="/calendar"
-              className="inline-flex items-center gap-2 text-secondary hover:text-primary font-semibold transition-colors group"
+              className="inline-flex items-center gap-2 text-secondary hover:text-primary font-semibold transition-all duration-300 group hover:scale-105"
             >
               <svg
-                className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -460,7 +501,7 @@ function Home() {
               </svg>
               <span>View Full Calendar with All Deadlines</span>
               <svg
-                className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -478,25 +519,25 @@ function Home() {
 
         {/* OUR HIGHLIGHTS */}
         <div className="mt-12 md:mt-24 mb-12 md:mb-20 flex flex-col items-center justify-center mx-auto max-w-3xl px-4">
-          <h2 className="text-gradient2 text-center mb-8 md:mb-16 text-3xl sm:text-4xl md:text-5xl font-bold">
+          <h2 className="text-gradient2 text-center mb-8 md:mb-16 text-3xl sm:text-4xl md:text-5xl font-bold fade-in-up-on-scroll">
             OUR HIGHLIGHTS
           </h2>
 
           {/* STUDENT CARDS */}
 
           {/* STUDENT CARD 1 */}
-          <div className="outline mb-12 md:mb-16 rounded-xl p-4 md:p-5 flex flex-col md:flex-row gap-6 md:gap-16 items-stretch min-h-[400px] md:min-h-[350px]">
-            <div className="rounded-xl w-full md:w-[300px] md:flex-shrink-0">
+          <div className="outline mb-12 md:mb-16 rounded-xl p-4 md:p-5 flex flex-col md:flex-row gap-6 md:gap-16 items-stretch min-h-[400px] md:min-h-[350px] fade-in-left-on-scroll hover:shadow-xl transition-all duration-300">
+            <div className="rounded-xl w-full md:w-[300px] md:flex-shrink-0 overflow-hidden group/img">
               <img
-                className="w-full h-60 md:h-[300px] rounded-xl object-cover"
+                className="w-full h-60 md:h-[300px] rounded-xl object-cover transition-transform duration-500 group-hover/img:scale-110"
                 src={tomiImage}
                 alt="student"
               />
             </div>
 
             <div className="flex flex-col justify-center flex-1">
-              <h3 className="text-3xl font-bold pb-1 ">Jamie Simpson</h3>
-              <h3 className="text-xl  pb-3 ">
+              <h3 className="text-3xl font-bold pb-1 transition-colors duration-300 hover:text-secondary">Jamie Simpson</h3>
+              <h3 className="text-xl  pb-3 text-gray-600">
                 Georgia Institute of Technology
               </h3>
               <p className="text-md text-wrap">
@@ -511,18 +552,18 @@ function Home() {
           </div>
 
           {/* STUDENT CARD 2 */}
-          <div className="outline rounded-xl p-4 md:p-5 flex flex-col md:flex-row-reverse gap-6 md:gap-16 items-stretch min-h-[400px] md:min-h-[350px]">
-            <div className="rounded-xl w-full md:w-[300px] md:flex-shrink-0">
+          <div className="outline rounded-xl p-4 md:p-5 flex flex-col md:flex-row-reverse gap-6 md:gap-16 items-stretch min-h-[400px] md:min-h-[350px] fade-in-right-on-scroll hover:shadow-xl transition-all duration-300">
+            <div className="rounded-xl w-full md:w-[300px] md:flex-shrink-0 overflow-hidden group/img">
               <img
-                className="w-full h-60 md:h-[300px] rounded-xl object-cover"
+                className="w-full h-60 md:h-[300px] rounded-xl object-cover transition-transform duration-500 group-hover/img:scale-110"
                 src={priyaImage}
                 alt="student"
               />
             </div>
 
             <div className="flex flex-col justify-center flex-1">
-              <h3 className="text-3xl font-bold pb-1 ">Joshua Samson</h3>
-              <h3 className="text-xl  pb-3 ">
+              <h3 className="text-3xl font-bold pb-1 transition-colors duration-300 hover:text-secondary">Joshua Samson</h3>
+              <h3 className="text-xl  pb-3 text-gray-600">
                 Massachusetts Institute of Technology
               </h3>
               <p className="text-md text-wrap">
@@ -539,14 +580,14 @@ function Home() {
 
         {/* VIEW SCHOLARSHIPS */}
         <div className="mt-12 md:mt-24 mb-12 md:mb-20 flex flex-col items-center justify-center mx-auto max-w-3xl px-4">
-          <h2 className="text-gradient2 text-center mb-4 md:mb-6 text-3xl sm:text-4xl md:text-5xl font-bold">
+          <h2 className="text-gradient2 text-center mb-4 md:mb-6 text-3xl sm:text-4xl md:text-5xl font-bold fade-in-up-on-scroll">
             VIEW SCHOLARSHIPS
           </h2>
-          <p className="mb-6 md:mb-8 text-sm md:text-base text-center">
+          <p className="mb-6 md:mb-8 text-sm md:text-base text-center fade-in-up-on-scroll stagger-1">
             Find more scholarships on our Scholarships page!
           </p>
-          <Link to="/scholarships">
-            <button className="outline transition-all duration-300 text-secondary hover:bg-gradient2 px-6 md:px-8 py-2 md:py-3 rounded-2xl text-lg md:text-xl hover:text-white">
+          <Link to="/scholarships" className="fade-in-up-on-scroll stagger-2">
+            <button className="outline transition-all duration-300 text-secondary hover:bg-gradient2 px-6 md:px-8 py-2 md:py-3 rounded-2xl text-lg md:text-xl hover:text-white hover:scale-110 active:scale-95 hover:shadow-lg">
               View Scholarships
             </button>
           </Link>

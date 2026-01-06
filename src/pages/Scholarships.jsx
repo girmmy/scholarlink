@@ -22,7 +22,9 @@ const Scholarships = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [scholarships, setScholarships] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [basedFilter, setBasedFilter] = useState("all"); // all | need | merit | both (for filter button, but data uses "NEED & MERIT BASED")
+  const [basedFilter, setBasedFilter] = useState("all"); // all | need | merit | need-and-merit
+  const [amountFilter, setAmountFilter] = useState("all"); // all | under-5k | 5k-10k | 10k-25k | 25k-50k | 50k-plus | full-tuition | varies
+  const [deadlineFilter, setDeadlineFilter] = useState("all"); // all | upcoming | this-month | this-year | open
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedScholarship, setSelectedScholarship] = useState(null);
@@ -181,10 +183,92 @@ const Scholarships = () => {
     }
   };
 
+  // Helper function to parse award amount
+  const parseAwardAmount = (awardStr) => {
+    if (!awardStr) return { min: 0, max: Infinity, type: "varies" };
+    
+    const lowerAward = awardStr.toLowerCase();
+    
+    // Check for "full tuition" or similar
+    if (lowerAward.includes("full tuition") || lowerAward.includes("full cost")) {
+      return { min: Infinity, max: Infinity, type: "full-tuition" };
+    }
+    
+    // Extract dollar amounts using regex
+    const dollarMatches = awardStr.match(/\$?([\d,]+)/g);
+    if (!dollarMatches || dollarMatches.length === 0) {
+      return { min: 0, max: Infinity, type: "varies" };
+    }
+    
+    // Parse numbers (remove $ and commas)
+    const amounts = dollarMatches.map(match => {
+      const num = parseInt(match.replace(/[$,]/g, ''), 10);
+      return isNaN(num) ? 0 : num;
+    }).filter(n => n > 0);
+    
+    if (amounts.length === 0) {
+      return { min: 0, max: Infinity, type: "varies" };
+    }
+    
+    const min = Math.min(...amounts);
+    const max = Math.max(...amounts);
+    
+    // If it's a range, use the range; otherwise use the single value for both
+    return { min, max: amounts.length > 1 ? max : min, type: "amount" };
+  };
+
+  // Helper function to check deadline
+  const checkDeadline = (deadlineStr) => {
+    if (!deadlineStr) return { type: "open" };
+    
+    const lowerDeadline = deadlineStr.toLowerCase();
+    
+    if (lowerDeadline.includes("open") || lowerDeadline.includes("rolling")) {
+      return { type: "open" };
+    }
+    
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+    
+    // Try to parse date
+    const monthMap = {
+      january: 0, jan: 0, february: 1, feb: 1, march: 2, mar: 2,
+      april: 3, apr: 3, may: 4, june: 5, jun: 5, july: 6, jul: 6,
+      august: 7, aug: 7, september: 8, sep: 8, october: 9, oct: 9,
+      november: 10, nov: 10, december: 11, dec: 11
+    };
+    
+    // Try format: "February 13,2026" or "February 13, 2026"
+    let match = deadlineStr.match(/(\w+)\s+(\d+)[,\s]+(\d{4})/i);
+    if (match) {
+      const [, month, day, year] = match;
+      const monthIndex = monthMap[month.toLowerCase()];
+      if (monthIndex !== undefined) {
+        const deadlineDate = new Date(parseInt(year), monthIndex, parseInt(day));
+        return { type: "date", date: deadlineDate };
+      }
+    }
+    
+    // Try format: "March 2026"
+    match = deadlineStr.match(/(\w+)\s+(\d{4})/i);
+    if (match) {
+      const [, month, year] = match;
+      const monthIndex = monthMap[month.toLowerCase()];
+      if (monthIndex !== undefined) {
+        const deadlineDate = new Date(parseInt(year), monthIndex, 1);
+        return { type: "date", date: deadlineDate };
+      }
+    }
+    
+    return { type: "unknown" };
+  };
+
   const filteredScholarships = useMemo(() => {
     const normalizedQuery = searchQuery.toLowerCase().trim();
 
     return scholarships.filter((sch) => {
+      // Text search filter
       const matchesQuery =
         !normalizedQuery ||
         sch.name?.toLowerCase().includes(normalizedQuery) ||
@@ -193,24 +277,87 @@ const Scholarships = () => {
 
       if (!matchesQuery) return false;
 
+      // Based filter (Need/Merit)
       const basedValue = (sch.based || "").toLowerCase();
-
+      
       if (basedFilter === "need") {
-        return basedValue.includes("need");
+        // Need-based only (has "need" but not "merit" or "both")
+        if (!basedValue.includes("need")) return false;
+        if (basedValue.includes("merit") || basedValue.includes("both")) return false;
       }
       if (basedFilter === "merit") {
-        return basedValue.includes("merit");
+        // Merit-based only (has "merit" but not "need" or "both")
+        if (!basedValue.includes("merit")) return false;
+        if (basedValue.includes("need") || basedValue.includes("both")) return false;
       }
-      if (basedFilter === "both") {
-        return (
-          basedValue.includes("both") ||
-          basedValue.includes("NEED & MERIT BASED")
-        );
+      if (basedFilter === "need-and-merit") {
+        // Need & Merit based (has both keywords or "both")
+        if (!(basedValue.includes("need & merit") || 
+              basedValue.includes("need and merit") || 
+              (basedValue.includes("need") && basedValue.includes("merit")) ||
+              basedValue.includes("both"))) {
+          return false;
+        }
       }
 
-      return true; // "all"
+      // Amount filter
+      if (amountFilter !== "all") {
+        const awardInfo = parseAwardAmount(sch.award);
+        
+        if (amountFilter === "under-5k") {
+          // Max should be less than 5000
+          if (awardInfo.type === "full-tuition" || awardInfo.max >= 5000) return false;
+        } else if (amountFilter === "5k-10k") {
+          // Range should overlap with 5000-10000
+          if (awardInfo.type === "full-tuition") return false;
+          if (awardInfo.max < 5000 || awardInfo.min > 10000) return false;
+        } else if (amountFilter === "10k-25k") {
+          // Range should overlap with 10000-25000
+          if (awardInfo.type === "full-tuition") return false;
+          if (awardInfo.max < 10000 || awardInfo.min > 25000) return false;
+        } else if (amountFilter === "25k-50k") {
+          // Range should overlap with 25000-50000
+          if (awardInfo.type === "full-tuition") return false;
+          if (awardInfo.max < 25000 || awardInfo.min > 50000) return false;
+        } else if (amountFilter === "50k-plus") {
+          // Min should be at least 50000
+          if (awardInfo.type === "full-tuition") return false;
+          if (awardInfo.min < 50000) return false;
+        } else if (amountFilter === "full-tuition") {
+          // Only full tuition
+          if (awardInfo.type !== "full-tuition") return false;
+        } else if (amountFilter === "varies") {
+          // Varies or other non-specific amounts
+          if (awardInfo.type === "full-tuition" || (awardInfo.type === "amount" && awardInfo.min > 0)) return false;
+        }
+      }
+
+      // Deadline filter
+      if (deadlineFilter !== "all") {
+        const deadlineInfo = checkDeadline(sch.deadline);
+        const now = new Date();
+        
+        if (deadlineFilter === "open") {
+          if (deadlineInfo.type !== "open") return false;
+        } else if (deadlineFilter === "upcoming") {
+          if (deadlineInfo.type !== "date" || deadlineInfo.date <= now) return false;
+        } else if (deadlineFilter === "this-month") {
+          if (deadlineInfo.type !== "date") return false;
+          const deadlineDate = deadlineInfo.date;
+          if (deadlineDate.getFullYear() !== now.getFullYear() || 
+              deadlineDate.getMonth() !== now.getMonth() ||
+              deadlineDate <= now) return false;
+        } else if (deadlineFilter === "this-year") {
+          if (deadlineInfo.type !== "date") return false;
+          const deadlineDate = deadlineInfo.date;
+          if (deadlineDate.getFullYear() !== now.getFullYear() || 
+              deadlineDate <= now) return false;
+        }
+      }
+
+      return true;
     });
-  }, [scholarships, searchQuery, basedFilter]);
+  }, [scholarships, searchQuery, basedFilter, amountFilter, deadlineFilter]);
 
   return (
     <div
@@ -237,6 +384,36 @@ const Scholarships = () => {
           <div className="mb-8 md:mb-10">
             <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-4 md:p-6 border border-white/20">
               <div className="flex flex-col gap-4">
+                {/* Filter Header with Count and Clear Button */}
+                <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-gray-700">
+                      {filteredScholarships.length} {filteredScholarships.length === 1 ? 'scholarship' : 'scholarships'} found
+                    </span>
+                    {(basedFilter !== "all" || amountFilter !== "all" || deadlineFilter !== "all" || searchQuery.trim()) && (
+                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                        Filters active
+                      </span>
+                    )}
+                  </div>
+                  {(basedFilter !== "all" || amountFilter !== "all" || deadlineFilter !== "all" || searchQuery.trim()) && (
+                    <button
+                      onClick={() => {
+                        setSearchQuery("");
+                        setBasedFilter("all");
+                        setAmountFilter("all");
+                        setDeadlineFilter("all");
+                      }}
+                      className="text-sm text-secondary hover:text-primary font-medium transition-colors flex items-center gap-1"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      Clear all filters
+                    </button>
+                  )}
+                </div>
+                
                 <div className="relative w-full">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <svg
@@ -262,25 +439,84 @@ const Scholarships = () => {
                   />
                 </div>
 
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    { id: "all", label: "All" },
-                    { id: "need", label: "Need-based" },
-                    { id: "merit", label: "Merit-based" },
-                    { id: "both", label: "Both" },
-                  ].map((filter) => (
-                    <button
-                      key={filter.id}
-                      onClick={() => setBasedFilter(filter.id)}
-                      className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
-                        basedFilter === filter.id
-                          ? "bg-gradient2 text-white shadow-md transform scale-105"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200"
-                      }`}
+                {/* Filter Section - Dropdowns */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {/* Type Filter */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Type
+                    </label>
+                    <select
+                      value={basedFilter}
+                      onChange={(e) => setBasedFilter(e.target.value)}
+                      className="w-full px-4 py-2.5 bg-white border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary transition-all shadow-sm appearance-none cursor-pointer"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23374151'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'right 0.75rem center',
+                        backgroundSize: '1.5em 1.5em',
+                        paddingRight: '2.5rem'
+                      }}
                     >
-                      {filter.label}
-                    </button>
-                  ))}
+                      <option value="all">All Types</option>
+                      <option value="need">Need-based</option>
+                      <option value="merit">Merit-based</option>
+                      <option value="need-and-merit">Need and Merit Based</option>
+                    </select>
+                  </div>
+
+                  {/* Amount Filter */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Award Amount
+                    </label>
+                    <select
+                      value={amountFilter}
+                      onChange={(e) => setAmountFilter(e.target.value)}
+                      className="w-full px-4 py-2.5 bg-white border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary transition-all shadow-sm appearance-none cursor-pointer"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23374151'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'right 0.75rem center',
+                        backgroundSize: '1.5em 1.5em',
+                        paddingRight: '2.5rem'
+                      }}
+                    >
+                      <option value="all">All Amounts</option>
+                      <option value="under-5k">Under $5,000</option>
+                      <option value="5k-10k">$5,000 - $10,000</option>
+                      <option value="10k-25k">$10,000 - $25,000</option>
+                      <option value="25k-50k">$25,000 - $50,000</option>
+                      <option value="50k-plus">$50,000+</option>
+                      <option value="full-tuition">Full Tuition</option>
+                      <option value="varies">Varies</option>
+                    </select>
+                  </div>
+
+                  {/* Deadline Filter */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Deadline
+                    </label>
+                    <select
+                      value={deadlineFilter}
+                      onChange={(e) => setDeadlineFilter(e.target.value)}
+                      className="w-full px-4 py-2.5 bg-white border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary transition-all shadow-sm appearance-none cursor-pointer"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23374151'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'right 0.75rem center',
+                        backgroundSize: '1.5em 1.5em',
+                        paddingRight: '2.5rem'
+                      }}
+                    >
+                      <option value="all">All Deadlines</option>
+                      <option value="upcoming">Upcoming</option>
+                      <option value="this-month">This Month</option>
+                      <option value="this-year">This Year</option>
+                      <option value="open">Open/Rolling</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
@@ -322,6 +558,8 @@ const Scholarships = () => {
                   onClick={() => {
                     setSearchQuery("");
                     setBasedFilter("all");
+                    setAmountFilter("all");
+                    setDeadlineFilter("all");
                   }}
                   className="mt-4 text-primary font-medium hover:underline"
                 >
