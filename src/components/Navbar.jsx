@@ -71,6 +71,14 @@ function Navbar() {
         >
           Calendar
         </Link>
+        {user && (
+          <Link
+            to="/favorites"
+            className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
+          >
+            Favorites
+          </Link>
+        )}
         <Link
           to="/references"
           className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
@@ -114,6 +122,12 @@ function Navbar() {
                   className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   View Profile
+                </Link>
+                <Link
+                  to="/favorites"
+                  className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  My Favorites
                 </Link>
                 <button
                   onClick={handleLogout}
@@ -163,6 +177,15 @@ function Navbar() {
             >
               Calendar
             </Link>
+            {user && (
+              <Link
+                to="/favorites"
+                className="text-gray-700 hover:text-blue-600 transition-colors py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Favorites
+              </Link>
+            )}
             <Link
               to="/references"
               className="text-gray-700 hover:text-blue-600 transition-colors py-2"

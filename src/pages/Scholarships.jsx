@@ -370,7 +370,7 @@ const Scholarships = () => {
 
         <main className="flex-grow pt-20 md:pt-24 pb-20 px-3 sm:px-4 md:px-6 max-w-7xl mx-auto w-full">
           {/* HEADER SECTION */}
-          <div className="mb-8 md:mb-12">
+          <div className="mb-8 md:mb-12 mt-8 md:mt-12">
             <h1 className="text-3xl sm:text-4xl md:text-5xl text-gradient1 font-bold text-gray-900 mb-3 md:mb-4 text-center">
               Explore Scholarships
             </h1>
