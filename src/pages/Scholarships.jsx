@@ -627,7 +627,7 @@ const Scholarships = () => {
                         </button>
                       </div>
 
-                      <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-secondary transition-colors leading-tight">
+                      <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-3 group-hover:text-secondary transition-colors leading-tight break-words">
                         {sch.name}
                       </h3>
                     </div>

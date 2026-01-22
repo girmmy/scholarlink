@@ -408,7 +408,7 @@ function Home() {
                       </button>
                     </div>
 
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors break-words">
                       {scholarship.name}
                     </h3>
 

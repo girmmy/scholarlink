@@ -50,7 +50,7 @@ const References = () => {
                   deadlines.
                 </p>
                 <a
-                  href="https://docs.google.com/document/d/your-pow-calendar-link"
+                  href="/Webmaster Work Log 25-26.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center px-8 py-4 bg-gradient2 hover:bg-gradient1 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
