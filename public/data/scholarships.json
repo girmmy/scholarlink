@@ -460,5 +460,19 @@
     "phone": "1-507-931-8340",
     "email": "burgerkingscholars@scholarshipamerica.org",
     "requirements": "financial information, proof that you were a burger king employee"
+  },
+  {
+    "id": 35,
+    "name": "LinkedIn Possibilities in Tech Scholarship",
+    "description": "The Possibilities in Tech Scholarship supports the big dreams of future tech talent. Scholarship recipients will engage in four years of community building, college navigation support, and technical training focused on these four pillars of persistence: Sense of Belonging, Self-Advocacy and Getting Help, Readiness for a Career in Technology, and Financial Independence.",
+    "eligibility": "be living in US/Puerto Rico/Guam/Canada, minimum 2.0 GPA, high school seniors or college student who is past recipient of the burger king scholarship, work at burger king/spouse work at burger king/parent works at burger king",
+    "acceptance_rate": "N/A",
+    "deadline": "March 11,2026",
+    "award": "$40,000",
+    "based": "Need & Merit Based",
+    "website": "https://apply.mykaleidoscope.com/program/LinkedIn2026",
+    "phone": "N/A",
+    "email": "scholarshipteam@linkedin.com",
+    "requirements": "financial information, letter of recommendation, brief essays, high school transcript"
   }
 ]
