@@ -1,9 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import blueFaintBg from "../assets/blue-faint-bg.png";
 
 const References = () => {
+  const [scholarships, setScholarships] = useState([]);
+
+  useEffect(() => {
+    fetch("/data/scholarships.json")
+      .then(res => res.json())
+      .then(data => setScholarships(data))
+      .catch(err => console.error("Error loading scholarships:", err));
+  }, []);
+
+  const generateMLACitation = (scholarship) => {
+    const orgName = scholarship.name;
+    const url = scholarship.website;
+    const year = new Date().getFullYear();
+    return `${orgName}. ${year}, ${url}.`;
+  };
+
   return (
     <div
       className="min-h-screen flex flex-col bg-cover bg-center bg-no-repeat relative overflow-x-hidden w-full"
@@ -1015,6 +1031,25 @@ const References = () => {
                     />
                   </svg>
                 </a>
+              </div>
+            </div>
+
+            {/* MLA Citations Section */}
+            <div className="bg-white rounded-2xl shadow-md p-8 mt-8">
+              <h2 className="text-3xl font-bold text-gradient2 mb-4">
+                Works Cited - MLA Format
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Use these properly formatted citations for academic papers and research projects.
+              </p>
+              <div className="bg-gray-50 rounded-lg p-6 font-mono text-sm leading-relaxed">
+                {scholarships
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((scholarship) => (
+                    <p key={scholarship.id} className="mb-3 pl-8 -indent-8">
+                      {generateMLACitation(scholarship)}
+                    </p>
+                  ))}
               </div>
             </div>
           </div>

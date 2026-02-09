@@ -9,6 +9,7 @@ import Calendar from "./pages/Calendar";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Favorites from "./pages/Favorites";
+import SuggestionConfirmation from "./pages/SuggestionConfirmation";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/references" element={<References />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/suggestion-confirmation" element={<SuggestionConfirmation />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/sign-up" element={<Signup />} />
         <Route path="/login" element={<Login />} />

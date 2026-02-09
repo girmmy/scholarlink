@@ -60,6 +60,12 @@ function Navbar() {
       {/* Desktop Navigation */}
       <div className="hidden md:flex justify-content align-items gap-5">
         <Link
+          to="/"
+          className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
+        >
+          Home
+        </Link>
+        <Link
           to="/scholarships"
           className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
         >
@@ -89,7 +95,7 @@ function Navbar() {
           to="/contact"
           className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
         >
-          Contact
+          Suggestion Form
         </Link>
         {user ? (
           <div className="relative group">
@@ -164,6 +170,13 @@ function Navbar() {
         <div className="absolute top-full left-0 right-0 bg-white shadow-lg md:hidden z-40">
           <div className="flex flex-col p-4 gap-4">
             <Link
+              to="/"
+              className="text-gray-700 hover:text-blue-600 transition-colors py-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link
               to="/scholarships"
               className="text-gray-700 hover:text-blue-600 transition-colors py-2"
               onClick={() => setIsMenuOpen(false)}
@@ -198,7 +211,7 @@ function Navbar() {
               className="text-gray-700 hover:text-blue-600 transition-colors py-2"
               onClick={() => setIsMenuOpen(false)}
             >
-              Contact
+              Suggestion Form
             </Link>
             {user ? (
               <>

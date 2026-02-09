@@ -341,7 +341,7 @@ function Home() {
         {/* UPCOMING SCHOLARSHIPS */}
         <div className="mt-24 mb-10 flex flex-col items-center justify-center mx-auto max-w-4xl px-4">
           <h2 className="text-gradient2 text-center text-5xl font-bold fade-in-up-on-scroll">
-            UPCOMING SCHOLARSHIPS
+            HIGHLIGHTED SCHOLARSHIPS
           </h2>
 
           {/* CARDS FOR SCHOLARSHIPS */}
@@ -520,7 +520,7 @@ function Home() {
         {/* OUR HIGHLIGHTS */}
         <div className="mt-12 md:mt-24 mb-12 md:mb-20 flex flex-col items-center justify-center mx-auto max-w-3xl px-4">
           <h2 className="text-gradient2 text-center mb-8 md:mb-16 text-3xl sm:text-4xl md:text-5xl font-bold fade-in-up-on-scroll">
-            OUR HIGHLIGHTS
+            TESTIMONIALS
           </h2>
 
           {/* STUDENT CARDS */}
